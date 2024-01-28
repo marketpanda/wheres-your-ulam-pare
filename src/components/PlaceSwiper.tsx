@@ -11,7 +11,7 @@ const PlaceSwiper = ({ places }:any) => {
         <swiper-container loop="true">
             {
                 places.map((place:any,i:any) => (
-                    <swiper-slide>
+                    <swiper-slide key={i}>
                         <div className='flex flex-col items-center'>
                         <div className="mb-5" key={i}>
                             <Image

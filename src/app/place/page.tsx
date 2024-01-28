@@ -1,4 +1,5 @@
  
+import Image from 'next/image'
 import React from 'react'
 
  
@@ -12,7 +13,7 @@ const Place = () => {
       <div className="flex justify-center flex-col max-w-[500px] items-center mx-auto
         bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 w-full h-full
         rounded">
-        <div className="mb-5"><img className="w-[240px] h-[240px] rounded-full" src="https://images.summitmedia-digital.com/spotph/images/2020/05/12/2-1589280286.jpg" /></div>
+        <div className="mb-5"><Image alt="Cheese Puff" className="w-[240px] h-[240px] rounded-full" src="https://images.summitmedia-digital.com/spotph/images/2020/05/12/2-1589280286.jpg" /></div>
         <div className="font-semibold text-xl">Cheese Puff</div>
         
        

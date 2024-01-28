@@ -34,7 +34,7 @@ export default async function Home() {
             bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 w-full h-full
             rounded">
 
-            <div className="mx-auto flex w-[300px] text-xl font-semibold opacity-80 p-3">Where's your Ulam Pare</div>
+            <div className="mx-auto flex w-[300px] text-xl font-semibold opacity-80 p-3">Where&apo;s your Ulam Pare</div>
              
             <div className="w-[500px] min-h-[500px] pb-10">
                 <PlaceSwiper places={places} />
