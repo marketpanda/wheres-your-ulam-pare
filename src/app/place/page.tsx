@@ -41,7 +41,7 @@ const Place = () => {
         </div>
         <div className="flex">
             <div className="text-right w-20 border p-1 border-dashed">comments::</div>
-            <div className="text-sm border grow p-1 border-dashed bg-white bg-opacity-50 backdrop-blur-md">"RSC craving is real!"</div> 
+            <div className="text-sm border grow p-1 border-dashed bg-white bg-opacity-50 backdrop-blur-md">&quot;RSC craving is real!&quot;</div> 
         </div>
 
           <div className="flex">
