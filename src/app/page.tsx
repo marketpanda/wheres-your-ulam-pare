@@ -24,28 +24,25 @@ export default async function Home() {
 
   return (
     <>
-      
-
-  
-        
+       
         <div className="flex items-center">
       
-          <div className="flex justify-center flex-col max-w-[500px] items-center mx-auto
-            bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 w-full h-full
-            rounded">
+          <div className="flex justify-center flex-col items-center mx-auto
+            bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 rounded h-screen">
 
-            <div className="mx-auto flex w-[300px] text-xl font-semibold opacity-80 p-3">Where&apo;s your Ulam Pare</div>
+            <div className="mx-auto mb-12 flex w-full justify-center text-2xl font-semibold opacity-80 p-3">
              
-            <div className="w-[500px] min-h-[500px] pb-10">
+              Where&apos;s your Ulam Pare
+              </div>
+             
+            <div>
                 <PlaceSwiper places={places} />
             </div>
           </div>
 
          
         </div>
-        
          
-      
     </>
     
   );
