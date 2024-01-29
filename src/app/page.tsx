@@ -7,9 +7,6 @@ import PlaceSwiper from "@/components/PlaceSwiper";
 register()
 const prisma = new PrismaClient()
  
-//https://www.youtube.com/watch?v=D-B77ctsZkY
-//https://www.youtube.com/watch?v=FMnlyi60avU
-
  
 
 export default async function Home() { 
