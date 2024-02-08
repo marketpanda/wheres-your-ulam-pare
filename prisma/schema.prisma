@@ -1,8 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-  provider = "prisma-client-js" 
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -17,11 +14,21 @@ model Place {
   category String 
   description String 
   price Json 
-  location String 
+  locations Location[]
   images String 
   pasalubongable Boolean
-  badges String[] 
-  
+  badges String[]
+  imagesMore String[] 
 }
 
+model Location {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  street String
+  townBarangay String
+  cityProvince String
+  zip String
+  coords String[]
+  place Place @relation(fields: [placeId], references: [id])
+  placeId String @db.ObjectId
+}
  

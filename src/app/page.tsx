@@ -8,18 +8,26 @@ register()
 const prisma = new PrismaClient()
  
  
-
 export default async function Home() { 
+  
   const getPlaces = async () => {
-    const response = await prisma.place.findMany()
-    console.log(response)
+    const response = await prisma.place.findMany({
+      include: {
+        locations: true
+      }
+    })
+
+    const hasLocations = response.filter(place => place.locations.length > 0)
+    // console.log(response)
+    console.log(hasLocations)
     return response
   }
 
   const places = await getPlaces()
   
-
+ 
   return (
+
     <>
        
         <div className="flex items-center">

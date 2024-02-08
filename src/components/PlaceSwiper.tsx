@@ -12,8 +12,18 @@ const PlaceSwiper = ({ places }:any) => {
             {
                 places.map((place:any,i:any) => (
                     <swiper-slide key={i}>
+                        
                         <div className='flex flex-col items-center'>
                             <div className="mb-5 w-[225px] h-[225px]" key={i}>
+                            {
+                                place.locations?.map((location: any, j: number) => (
+                                    <div key={j}>
+                                        <p>street: { location.street }</p>
+                                    </div>
+
+                                ))
+                        
+                            }
                                 <Image
                                 className="object-cover h-full w-full rounded-full"
                                 src={ place.images }
@@ -38,7 +48,7 @@ const PlaceSwiper = ({ places }:any) => {
                                 </div> 
                                 <div className="flex">
                                     <div className="text-right w-20 sm:w-32 border border-dashed p-1">found in</div>
-                                    <div className="text-sm border grow p-1 border-dashed bg-white bg-opacity-50 backdrop-blur-md">{ place.location }</div>
+                                    <div className="text-sm border grow p-1 border-dashed bg-white bg-opacity-50 backdrop-blur-md">{ JSON.stringify(place.locations) }</div>
                                 </div> 
                                 
                                 <div className="flex">
