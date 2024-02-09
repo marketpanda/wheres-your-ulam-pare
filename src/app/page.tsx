@@ -37,12 +37,13 @@ export default async function Home() {
    
   return (
 
-    <>
+    <><div className="absolute left-5 w-[450px] h-[350px] bg-white rounded">
+    {/* <DynamicComponentMap /> */}
+    <Map />
+  </div> 
       
         <div className="flex items-center">
-            <div className="absolute left-5 w-[450px] h-[350px] bg-white rounded">
-              <DynamicComponentMap />
-            </div>    
+               
             {/* https://lucide.dev/icons/ */}
           
           <div className="flex justify-center flex-col items-center mx-auto
