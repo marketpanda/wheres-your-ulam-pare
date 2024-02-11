@@ -8,12 +8,10 @@ import PlaceSwiper from "@/components/PlaceSwiper";
 import MapDynamicWrapped from "@/components/MapDynamicWrapped";
 
 import React  from 'react'
+import MapCaller from "@/components/MapDynamicWrapped";
  
-
-
 const prisma = new PrismaClient()
  
-
 export default async function Home() { 
 
   const getPlaces = async () => {
@@ -43,7 +41,7 @@ export default async function Home() {
             Where&apos;s your Ulam Pare
           </div> */}
           <div className="h-2/5 bg-white">
-            <MapDynamicWrapped />
+            <MapCaller places={places} />
           </div>  
           <div className="h-3/5 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500"> 
             <PlaceSwiper places={places} />
