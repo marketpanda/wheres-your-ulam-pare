@@ -7,6 +7,18 @@ import { register } from "swiper/element/bundle";
 
 register()
 const PlaceSwiper = ({ places }:any) => {
+    const loopThroughPrices = (prices:Object) => {
+        const htmlArrayHolder = []
+
+        for (const [key, value] of Object.entries(prices)) {
+            const k = key
+            const v = value
+            htmlArrayHolder.push(`Php${v}/${k} `)
+        }
+        
+        return htmlArrayHolder
+    }
+
   return (
     <div className='relative top-[-50px] sm:top-4 z-[8888]'> 
         <swiper-container loop="true" navigation="true">
@@ -32,12 +44,12 @@ const PlaceSwiper = ({ places }:any) => {
                                 height="250"
                                 alt={ place.item } />
                             </div>
-                            <div className=" bg-white backdrop-blur bg-opacity-20 rounde-none sm:rounded  py-1 flex items-center  w-full sm:w-[480px] px-[10px] justify-between text-2xl">
+                            <div className="relative bg-white bg-opacity-20 rounded-none sm:rounded  py-1 flex items-center  w-full sm:w-[480px] px-[10px] justify-between text-2xl">
                                 <div className='font-bold'>
 
                                 { place.item}
                                 </div>
-                                <div className=' flex gap-2 absolute right-5'>
+                                <div className='flex gap-2 absolute right-5'>
                                     
                                     <button>
 
@@ -62,7 +74,7 @@ const PlaceSwiper = ({ places }:any) => {
                             <div className="flex flex-col gap-1 text-sm mt-3 w-full sm:w-[480px] px-[10px] sm:px-[0px]"> 
                                 <div className="flex">
                                     <div className="text-right w-24 sm:w-32 border border-dashed p-1">by</div>
-                                    <div className="text-sm border grow p-1 border-dashed bg-white bg-opacity-50 backdrop-blur-md">{ place.place }</div>
+                                    <div className="text-sm border grow p-1 border-dashed bg-white bg-opacity-50">{ place.place }</div>
                                 </div> 
                                 {/* <div className="flex">
                                     <div className="text-right w-20 sm:w-32 border border-dashed p-1">category</div>
@@ -70,27 +82,22 @@ const PlaceSwiper = ({ places }:any) => {
                                 </div>  */}
                                 <div className="flex">
                                     <div className="text-right w-24 sm:w-32 border border-dashed p-1">price</div>
-                                    <div className="text-sm border grow p-1 border-dashed bg-white bg-opacity-50 backdrop-blur-md">{ JSON.stringify(place.price) }</div>
+                                    <div className="text-sm border grow p-1 border-dashed bg-white bg-opacity-50">{
+                                       loopThroughPrices(place.price)
+                                        // JSON.stringify(place.price)
+                                    
+                                    }</div>
                                 </div> 
                                 <div className="flex">
                                     <div className="text-right w-24 sm:w-32 border border-dashed p-1">found in</div>
-                                    <div className="text-sm border grow p-1 border-dashed bg-white bg-opacity-50 backdrop-blur-md">
+                                    <div className="text-sm border grow p-1 border-dashed bg-white bg-opacity-50">
                                         <div className="w-[200px] sm:w-[300px]">
-
                                         {
                                             place.locations.map((location:any) => (
                                                 `${location.street}, ${location.townBarangay}, ${location.cityProvince}`
                                                 )) 
-                                            }
-
-                                        {
-                                            place.locations.map((location:any) => (
-                                                `${location.street}, ${location.townBarangay}, ${location.cityProvince}`
-                                                )) 
-                                            }
-                                        </div>
-
- 
+                                        } 
+                                        </div> 
                                     </div>
                                 </div> 
                                 
