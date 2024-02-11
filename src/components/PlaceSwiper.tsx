@@ -19,7 +19,7 @@ const PlaceSwiper = ({ places }:any) => {
         return htmlArrayHolder
     }
 
-    const openDetails = (details) => {
+    const openDetails = (details:any) => {
         console.log(details)
     }
 
