@@ -37,10 +37,10 @@ const Map = ({places}: {places:any})  => {
                 key={i}
               >
                 <Popup>
-                  '<b>'
+                  
                   {entry.item}@
                   {entry.place}
-                  '</b>'
+                   
                 </Popup>
               </Marker>
             ))
