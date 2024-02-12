@@ -15,7 +15,7 @@ interface MarkerData {
 }
 
 interface Props {
-  mapRef: MutableRefObject<any>
+ 
   places: Place[]
  
 }
