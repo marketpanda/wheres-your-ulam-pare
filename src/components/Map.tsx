@@ -51,11 +51,9 @@ const Map:FC<Props> = ({places})  => {
           scrollWheelZoom={true}
           zoom={defaulZoom} 
           center={defaultPosition}
-          className="w-full max-w-[720px] h-full" 
-         
-          
+          className="w-full max-w-[720px] h-full"  
         >
-          //https://www.youtube.com/watch?v=V7LfrS3T5fs
+           
           <TileLayer  
             // attribution='&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; `<a href="https://openmaptiles.org/" target="_blank">OMT</a> &copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors'           
             url={`https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png?api_key=${process.env.STADIA_API_KEY}`} 
