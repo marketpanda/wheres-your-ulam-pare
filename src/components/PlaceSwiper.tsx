@@ -3,10 +3,14 @@
 import Image from 'next/image';
 import React from 'react'
 import { register } from "swiper/element/bundle";
-
+import ChangeViewButton from './ChangeViewButton';
+import { useCounterStore } from '@/store';
 
 register()
 const PlaceSwiper = ({ places }:any) => {
+    
+    const { coords, changeCoords } = useCounterStore()
+
     const loopThroughPrices = (prices:Object) => {
         const htmlArrayHolder = []
 
@@ -59,23 +63,14 @@ const PlaceSwiper = ({ places }:any) => {
                                 </div>
                                 <div className='flex gap-2 absolute right-5'>
                                     
-                                    <button onClick={() =>openDetails('hello')}>
-
-                                    
+                                    <button onClick={() =>openDetails('hello')}> 
                                     <div className='rounded-full bg-white shadow w-[48px] h-[48px] flex items-center justify-center'>
                                         <svg viewBox="0 0 32 32" width="32" height="32"><g fill="none"><path d="M11 12a1 1 0 0 1 1-1h8a1 1 0 1 1 0 2h-8a1 1 0 0 1-1-1zm1 4a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2h-8zm-1 6a1 1 0 0 1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1zm1-18a1 1 0 1 0-2 0v1H9a3 3 0 0 0-3 3v18a3 3 0 0 0 3 3h9.222a3 3 0 0 0 2.027-.788l4.778-4.38A3 3 0 0 0 26 21.62V8a3 3 0 0 0-3-3h-1V4a1 1 0 1 0-2 0v1h-3V4a1 1 0 1 0-2 0v1h-3V4zM9 7h14a1 1 0 0 1 1 1v13h-4a2.5 2.5 0 0 0-2.5 2.5V27H9a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1zm10.5 19.185V23.5a.5.5 0 0 1 .5-.5h2.975L19.5 26.185z" fill="purple"></path></g></svg> 
                                     </div>
                                     </button>
-
-                                    <button onClick={() => zoomToMap([1,1])}>
-
-                                    
-                                    <div className='rounded-full bg-white shadow w-[48px] h-[48px]  flex items-center justify-center'>
-                                        <svg viewBox="0 0 28 28" width="32" height="32"><g fill="none"><path d="M14 2.25c5.385 0 9.75 4.365 9.75 9.75c0 4.12-2.895 8.61-8.61 13.518a1.75 1.75 0 0 1-2.283-.002l-.378-.328C7.017 20.408 4.25 16.028 4.25 12c0-5.385 4.365-9.75 9.75-9.75zm0 6a3.75 3.75 0 1 0 0 7.5a3.75 3.75 0 0 0 0-7.5z" fill="purple"></path></g></svg> 
-                                    </div>
-                                    </button>
-                                     
-                                     
+ 
+                                    <ChangeViewButton coords={[place.locations[0].coords]}  />  
+                                    {/* <ChangeViewButton count={place.locations[0].coords} />   */}
                                 </div>
                             
                             </div>

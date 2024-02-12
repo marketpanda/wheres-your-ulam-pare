@@ -1,5 +1,4 @@
  
-
 import Image from "next/image";
 import { PrismaClient } from "@prisma/client"; 
 import { register } from "swiper/element/bundle";
@@ -7,12 +6,18 @@ register()
 import PlaceSwiper from "@/components/PlaceSwiper";
 import MapDynamicWrapped from "@/components/MapDynamicWrapped";
 
-import React  from 'react'
+import React, { FC }  from 'react'
 import MapCaller from "@/components/MapDynamicWrapped";
+
+import { useCounterStore } from "@/store";
  
 const prisma = new PrismaClient()
  
-export default async function Home() { 
+
+// https://www.youtube.com/watch?v=V7LfrS3T5fs
+const Home:FC = async () => { 
+
+  
 
   const getPlaces = async () => {
     const response = await prisma.place.findMany({
@@ -28,7 +33,9 @@ export default async function Home() {
   }
 
   const places = await getPlaces()
-   
+
+  
+
   return (
 
     <> 
@@ -53,3 +60,5 @@ export default async function Home() {
     
   );
 }
+
+export default Home
