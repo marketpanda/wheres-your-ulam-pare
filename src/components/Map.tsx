@@ -14,8 +14,7 @@ interface MarkerData {
   title: string
 }
 
-interface Props {
- 
+interface Props { 
   places: Place[]
  
 }
@@ -30,24 +29,41 @@ const Map:FC<Props> = ({places})  => {
     // https://www.youtube.com/watch?v=V7LfrS3T5fs
     // https://www.youtube.com/watch?v=OpvGiudUgXs
     // console.log('places ', places) 
-    const [map, setMap] = useState<null | undefined>(null)
+    const map = useRef()
+    // const [map, setMap] = useState<any | undefined>(null)
     const defaultPosition: [number, number] = [14.5813245, 121.0033887]
     const defaulZoom:number = 17
 
     const { coords } = useCounterStore()
 
-    useEffect(() => {
-      const unsub = useCounterStore.subscribe(state => state.coords, (fish, prevFish) => {
-        console.log('test ', fish)
-         
-      })
+    const MapInsideComponent = (props:any) => {
+      const theMap = useMap()
 
-      return unsub
-    }, [])
+      useEffect(() => {
+        const unsub = useCounterStore.subscribe(state => state.coords, (fish, prevFish) => {
+          
+          if (theMap) {
+            const num1 = parseFloat(fish[0])
+            const num2 = parseFloat(fish[0][1])
+            
+            // console.log(num1)
+            // console.log(num2)
+            theMap.flyTo([num1, num2], theMap.getZoom(), {
+              animate: true,
+              duration: 2
+            })
+            console.log(fish)
+            console.log(theMap)
+          }
+        }) 
+        return unsub
+      }, [])
+    }
 
     
     return ( 
         <MapContainer 
+          
           scrollWheelZoom={true}
           zoom={defaulZoom} 
           center={defaultPosition}
@@ -78,6 +94,7 @@ const Map:FC<Props> = ({places})  => {
             coords={getCoordsOfCurrentPlace}
             zoom={17}
           /> */}
+          <MapInsideComponent />
 
       </MapContainer>
   )

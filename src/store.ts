@@ -3,7 +3,7 @@ import { subscribeWithSelector } from 'zustand/middleware'
 
 type CounterStore = {
     count: number[],
-    coords?: number[],
+    coords?: any,
     changeCoords: (newCoords: number[]) => void
      
 }

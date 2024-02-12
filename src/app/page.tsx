@@ -17,8 +17,6 @@ const prisma = new PrismaClient()
 // https://www.youtube.com/watch?v=V7LfrS3T5fs
 const Home:FC = async () => { 
 
-  
-
   const getPlaces = async () => {
     const response = await prisma.place.findMany({
       include: {
@@ -34,15 +32,11 @@ const Home:FC = async () => {
 
   const places = await getPlaces()
 
-  
-
   return (
 
     <> 
       <div className="flex justify-center h-screen bg-gray-100">
-              
-         
-        
+                      
         <div className="flex flex-col rounded-xl overflow-hidden m-2 max-w-[720px] w-full shadow"> 
           {/* <div className="mx-auto  flex w-full justify-center text-2xl font-semibold opacity-80 p-3"> 
             Where&apos;s your Ulam Pare
