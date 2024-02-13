@@ -69,7 +69,7 @@ const PlaceSwiper = ({ places }:any) => {
                                     </div>
                                     </button>
  
-                                    <ChangeViewButton coords={[place.locations[0].coords]}  />  
+                                    <ChangeViewButton coords={[place.locations[0].coords]} placeId={place.id} />  
                                     {/* <ChangeViewButton count={place.locations[0].coords} />   */}
                                 </div>
                             

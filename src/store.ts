@@ -1,17 +1,29 @@
 import { create } from 'zustand'
 import { subscribeWithSelector } from 'zustand/middleware'
 
-type CounterStore = {
-    count: number[],
-    coords?: any,
-    changeCoords: (newCoords: number[]) => void
-     
+type CounterStore = { 
+    place: {
+        coords?: any 
+        activePlaceId?:any
+    }    
+    changeCoords: (newCoords: number[]) => void 
+    changeActivePlaceId: (newId: string) => void 
+    changePlace: (newCoords: any, newPlaceId: string) => void 
 }
 
 export const useCounterStore = create<CounterStore>()(subscribeWithSelector((set) => ({
-    count: [0, 0],
-    coords: [1, 1],
-    changeCoords: (newCoords: number[]) => set({coords: newCoords})
-    
+    place: { 
+        coords: [1, 1],
+        activePlaceId: null 
+    },
+    changeCoords: (newCoords) => set((state) => ({ ...state, place: { ...state.place, coords: newCoords}})),
+    changeActivePlaceId: (newId) => set((state) => ({ ...state, place: { ...state.place, activePlaceId: newId }})),
+    changePlace: (newCoords: number[], newId: string) => set((state) => ({
+        ...state,
+        place: {
+            coords: newCoords,
+            activePlaceId: newId
+        }
+    }))
 })))
 

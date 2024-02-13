@@ -1,27 +1,25 @@
 import React, { FC } from 'react'
 import { useCounterStore } from '@/store'
 interface Props {
+    placeId?:any
     map?: any
     coords?: any
     zoom?: number
     count?:number
 }
 
-const ChangeViewButton:FC<Props> = ({map, coords, zoom, count}) => {
-    const { changeCoords } = useCounterStore()
+const ChangeViewButton:FC<Props> = ({placeId, map, coords, zoom, count}) => {
+    
     
     const zoomToMap = () => {
 
-        useCounterStore.getState().changeCoords(coords) 
-        // console.log('coords ', coords)
-    
-        if (map) {
-            map.setView(coords, zoom, { animate: true })
-        }
-
+        useCounterStore.getState().changePlace(coords, placeId)  
+        // useCounterStore.getState().changeCoords(coords)  
+        // useCounterStore.getState().changeActivePlaceId(placeId)  
+        
     }
 
-    changeCoords
+    
   return (
     
     <button onClick={() => zoomToMap()}>

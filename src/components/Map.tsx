@@ -25,35 +25,40 @@ interface Place {
   location: { coords: [number, number]}[]
 }
 
+ 
+
 const Map:FC<Props> = ({places})  => {  
     // https://www.youtube.com/watch?v=V7LfrS3T5fs
     // https://www.youtube.com/watch?v=OpvGiudUgXs
-    // console.log('places ', places) 
+ 
     const map = useRef()
-    // const [map, setMap] = useState<any | undefined>(null)
+ 
     const defaultPosition: [number, number] = [14.5813245, 121.0033887]
     const defaulZoom:number = 17
 
-    const { coords } = useCounterStore()
-
+    const markers:any = []
     const MapInsideComponent = (props:any) => {
+      
       const theMap = useMap()
-
-      useEffect(() => {
-        const unsub = useCounterStore.subscribe(state => state.coords, (fish, prevFish) => {
+      useEffect(() => { 
+        const unsub = useCounterStore.subscribe(state => state, (newState, prevState) => { 
           
           if (theMap) {
-            const num1 = parseFloat(fish[0])
-            const num2 = parseFloat(fish[0][1])
+            const num1 = parseFloat(newState.place.coords[0])
+            const num2 = parseFloat(newState.place.coords[0][1])
             
-            // console.log(num1)
-            // console.log(num2)
             theMap.flyTo([num1, num2], theMap.getZoom(), {
               animate: true,
               duration: 2
             })
-            console.log(fish)
-            console.log(theMap)
+          }
+          console.log(newState.place.coords)
+          console.log(newState.place.activePlaceId)
+          console.log(markers)
+
+          const marker = markers.current.find((m:any) => m.id === newState.place.activePlaceId)
+          if (marker && marker.ref && marker.ref.current) {
+            marker.ref.current.openPopup()
           }
         }) 
         return unsub
@@ -61,10 +66,12 @@ const Map:FC<Props> = ({places})  => {
       return null 
     }
 
+    const addMarker = (markerRef:any, markerId:string) => {
+      markers.push({ id: markerId, ref: markerRef})
+    }
     
     return ( 
         <MapContainer 
-          
           scrollWheelZoom={true}
           zoom={defaulZoom} 
           center={defaultPosition}
@@ -79,24 +86,17 @@ const Map:FC<Props> = ({places})  => {
             places.map((entry:any, i:number) => (
               <Marker 
                 position={entry.locations[0].coords}
-                key={i}
+                key={entry.id}
+                ref={(marker) => addMarker(marker, entry.id)}
               >
-                <Popup>
-                  
+                <Popup> 
                   {entry.item}@
-                  {entry.place}
-                  
+                  {entry.place} 
                 </Popup>
               </Marker>
             ))
           }
-          {/* <ChangeViewButton
-            map = {mapRef.current}
-            coords={getCoordsOfCurrentPlace}
-            zoom={17}
-          /> */}
-          <MapInsideComponent />
-
+          <MapInsideComponent /> 
       </MapContainer>
   )
 }
