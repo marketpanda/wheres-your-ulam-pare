@@ -58,6 +58,7 @@ const Map:FC<Props> = ({places})  => {
         }) 
         return unsub
       }, [])
+      return null 
     }
 
     
