@@ -9,7 +9,7 @@ import { useCounterStore } from '@/store';
 register()
 const PlaceSwiper = ({ places }:any) => {
     
-    const { coords, changeCoords } = useCounterStore()
+    
 
     const loopThroughPrices = (prices:Object) => {
         const htmlArrayHolder = []

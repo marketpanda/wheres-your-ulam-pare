@@ -1,7 +1,7 @@
 "use client"
 
 import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from "react-leaflet"
-import L from 'leaflet'
+import L, { Icon } from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import 'leaflet-defaulticon-compatibility'
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css'
@@ -22,7 +22,7 @@ interface Props {
 interface Place {
   item: string
   place: string
-  location: { coords: [number, number]}[]
+  location: { coords: [number, number]}[] 
 }
 
  
@@ -30,13 +30,21 @@ interface Place {
 const Map:FC<Props> = ({places})  => {  
     // https://www.youtube.com/watch?v=V7LfrS3T5fs
     // https://www.youtube.com/watch?v=OpvGiudUgXs
+
+    const legalIcon = new Icon({
+      // iconUrl: 'https://img.icons8.com/external-icongeek26-linear-colour-icongeek26/64/external-legal-business-and-finance-icongeek26-linear-colour-icongeek26.png',
+      iconUrl: markerIcon.src,
+      iconSize: [40,40],
+      iconAnchor: [24,24],
+      popupAnchor: [0,-20]
+    })
  
-    const map = useRef()
+    // const map = useRef()
  
     const defaultPosition: [number, number] = [14.5813245, 121.0033887]
     const defaulZoom:number = 17
 
-    const markers:any = []
+    const markerRefs = useRef([])
     const MapInsideComponent = (props:any) => {
       
       const theMap = useMap()
@@ -54,21 +62,16 @@ const Map:FC<Props> = ({places})  => {
           }
           console.log(newState.place.coords)
           console.log(newState.place.activePlaceId)
-          console.log(markers)
+           
 
-          const marker = markers.current.find((m:any) => m.id === newState.place.activePlaceId)
-          if (marker && marker.ref && marker.ref.current) {
-            marker.ref.current.openPopup()
-          }
+          
         }) 
         return unsub
       }, [])
       return null 
     }
 
-    const addMarker = (markerRef:any, markerId:string) => {
-      markers.push({ id: markerId, ref: markerRef})
-    }
+    
     
     return ( 
         <MapContainer 
@@ -87,11 +90,22 @@ const Map:FC<Props> = ({places})  => {
               <Marker 
                 position={entry.locations[0].coords}
                 key={entry.id}
-                ref={(marker) => addMarker(marker, entry.id)}
+                
+                icon={legalIcon}
               >
                 <Popup> 
-                  {entry.item}@
-                  {entry.place} 
+                  <div className="w-[180px]">
+                  <div className="h-full overflow-hidden rounded">
+                    <img
+                      className="object-cover w-full h-12"
+                      src={ entry.images } 
+                      alt={ entry.item } />
+                  </div>
+                 
+                    <span className="font-bold text-violet-900 mt-1 w-full flex justify-end">
+                      @{entry.place} 
+                    </span>
+                  </div>
                 </Popup>
               </Marker>
             ))

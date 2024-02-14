@@ -31,7 +31,7 @@ const Home:FC = async () => {
   }
 
   const places = await getPlaces()
-
+  console.log(places)
   return (
 
     <> 
