@@ -1,6 +1,6 @@
 "use client"
 
-import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from "react-leaflet"
+import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents, Tooltip } from "react-leaflet"
 import L, { Icon } from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import 'leaflet-defaulticon-compatibility'
@@ -35,7 +35,7 @@ const Map:FC<Props> = ({places})  => {
       // iconUrl: 'https://img.icons8.com/external-icongeek26-linear-colour-icongeek26/64/external-legal-business-and-finance-icongeek26-linear-colour-icongeek26.png',
       iconUrl: markerIcon.src,
       iconSize: [40,40],
-      iconAnchor: [24,24],
+      iconAnchor: [20,20],
       popupAnchor: [0,-20]
     })
  
@@ -55,7 +55,7 @@ const Map:FC<Props> = ({places})  => {
             const num1 = parseFloat(newState.place.coords[0])
             const num2 = parseFloat(newState.place.coords[0][1])
             
-            theMap.flyTo([num1, num2], theMap.getZoom(), {
+            theMap.flyTo([num1, num2], 18, {
               animate: true,
               duration: 2
             })
@@ -72,7 +72,7 @@ const Map:FC<Props> = ({places})  => {
     }
 
     
-    
+ 
     return ( 
         <MapContainer 
           scrollWheelZoom={true}
@@ -87,12 +87,28 @@ const Map:FC<Props> = ({places})  => {
           />
           {
             places.map((entry:any, i:number) => (
+              <>
+             
               <Marker 
                 position={entry.locations[0].coords}
                 key={entry.id}
-                
+                // ref={entry.id}
                 icon={legalIcon}
               >
+                 {/* <Tooltip>
+                  <div className="w-[180px]">
+                    <div className="h-full overflow-hidden rounded">
+                      <img
+                        className="object-cover w-full h-12"
+                        src={ entry.images } 
+                        alt={ entry.item } />
+                    </div> 
+                    <span className="font-bold text-violet-900 mt-1 w-full flex justify-end">
+                      @{entry.place} 
+                    </span>
+                  </div>
+              
+                </Tooltip> */}
                 <Popup> 
                   <div className="w-[180px]">
                   <div className="h-full overflow-hidden rounded">
@@ -108,6 +124,7 @@ const Map:FC<Props> = ({places})  => {
                   </div>
                 </Popup>
               </Marker>
+              </>
             ))
           }
           <MapInsideComponent /> 
