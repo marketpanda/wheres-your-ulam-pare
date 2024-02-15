@@ -1,7 +1,7 @@
 "use client"
 
 import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents, Tooltip } from "react-leaflet"
-import L, { Icon } from 'leaflet'
+import L, { Icon, LatLng, icon } from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import 'leaflet-defaulticon-compatibility'
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css'
@@ -16,7 +16,6 @@ interface MarkerData {
 
 interface Props { 
   places: Place[]
- 
 }
 
 interface Place {
@@ -36,7 +35,8 @@ const Map:FC<Props> = ({places})  => {
       iconUrl: markerIcon.src,
       iconSize: [40,40],
       iconAnchor: [20,20],
-      popupAnchor: [0,-20]
+      popupAnchor: [0,-20],
+     
     })
  
     // const map = useRef()
@@ -44,9 +44,23 @@ const Map:FC<Props> = ({places})  => {
     const defaultPosition: [number, number] = [14.5813245, 121.0033887]
     const defaulZoom:number = 17
 
-    const [userPosition, setUserPosition] = useState<null | number>(null)
+    const [userPosition, setUserPosition] = useState<null | string>(null)
+    const [singleMarker, setSingleMarker] = useState<L.Marker | null>(null) 
     const MapInsideComponent = (props:any) => {
       const theMap = useMap()
+      const theMapEvents = useMapEvents({
+        click: (e) => {
+          if (singleMarker) {
+            singleMarker.remove()
+          }
+          const { lat, lng } = e.latlng
+          const newMarker = L.marker([lat,lng], {icon: legalIcon}).addTo(theMapEvents)
+          setSingleMarker(newMarker)
+          setUserPosition(null)
+
+          e.target.setView([lat, lng], e.target.getZoom())
+        }
+      })
       
       useEffect(() => { 
         const unsub = useCounterStore.subscribe(state => state, (newState, prevState) => { 
@@ -70,37 +84,36 @@ const Map:FC<Props> = ({places})  => {
       }, [])
 
       useEffect(() => {
-        if (userPosition) {
-
+        if (userPosition === 'getLocation') {
           theMap.locate().on("locationfound", (e) => {
-            const userLocationMarker = L.marker(e.latlng).addTo(theMap)
+            const userLocationMarker = L.marker(e.latlng, {icon: legalIcon}).addTo(theMap)
             userLocationMarker.bindPopup(`You are here`).openPopup()
-            theMap.flyTo(e.latlng, theMap.getZoom())
+            theMap.flyTo(e.latlng, 16)
             setUserPosition(null)
-          })
-
+          }) 
         }
-
-
+  
+        return
+ 
       }, [userPosition])
-
-
-      return null 
-
-      
-    }
-
-    const pinUserLocation = () => {
-      console.log('pin user location')
+ 
+      return userPosition === null ? null : (
+        <Marker  position={[14.5787404,121.0001156]}>
+          <Popup>You are here</Popup>
+        </Marker>
+      ) 
+    } 
+    const pinUserLocation = (e:any) => {
+      if (userPosition !== 'pinLocation') {
+        setUserPosition(prev => prev = 'pinLocation')
+        console.log('hello')
+      }
     }
     
     const getUserLocation = () => {
-
-      setUserPosition(prev => prev = 1)
+      setUserPosition(prev => prev = 'getLocation')
       console.log('get user location')
     }
-
-    
  
     return ( 
         <>
@@ -112,7 +125,7 @@ const Map:FC<Props> = ({places})  => {
           scrollWheelZoom={true}
           zoom={defaulZoom} 
           center={defaultPosition}
-          className="w-full max-w-[720px] h-full"  
+          className="w-full max-w-[720px] h-full"          
         >
            
           <TileLayer  
@@ -160,8 +173,18 @@ const Map:FC<Props> = ({places})  => {
               </Marker>
               </>
             ))
+ 
+
           }
-          <MapInsideComponent /> 
+            {/* <Marker 
+              position={[14.5787404,121.0001156]}
+              icon={legalIcon}>
+            </Marker> */}
+
+         
+            
+          <MapInsideComponent />
+        
         </MapContainer>
         </>
   )
