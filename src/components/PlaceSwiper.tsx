@@ -1,11 +1,13 @@
 "use client"
 
 import Image from 'next/image';
-import React from 'react'
+import React, { useState } from 'react'
 import { register } from "swiper/element/bundle";
 import ChangeViewButton from './ChangeViewButton';
 import { useCounterStore } from '@/store';
 import PlaceDetailsButton from './PlaceDetailsButton';
+import SwipeableDrawer from '@mui/material/SwipeableDrawer'
+import { tree } from 'next/dist/build/templates/app-page';
 
 register()
 const PlaceSwiper = ({ places }:any) => {
@@ -25,6 +27,11 @@ const PlaceSwiper = ({ places }:any) => {
     }
 
     console.log(places)
+
+    const [open, setOpen] = useState(false)
+    const toggleDrawer = (newOpen: boolean) => () => {
+        setOpen(newOpen)
+    }
 
   return (
     <div className='relative top-[-50px] sm:top-4 z-[8888]'> 
@@ -63,6 +70,7 @@ const PlaceSwiper = ({ places }:any) => {
                                         <svg viewBox="0 0 32 32" width="32" height="32"><g fill="none"><path d="M11 12a1 1 0 0 1 1-1h8a1 1 0 1 1 0 2h-8a1 1 0 0 1-1-1zm1 4a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2h-8zm-1 6a1 1 0 0 1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1zm1-18a1 1 0 1 0-2 0v1H9a3 3 0 0 0-3 3v18a3 3 0 0 0 3 3h9.222a3 3 0 0 0 2.027-.788l4.778-4.38A3 3 0 0 0 26 21.62V8a3 3 0 0 0-3-3h-1V4a1 1 0 1 0-2 0v1h-3V4a1 1 0 1 0-2 0v1h-3V4zM9 7h14a1 1 0 0 1 1 1v13h-4a2.5 2.5 0 0 0-2.5 2.5V27H9a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1zm10.5 19.185V23.5a.5.5 0 0 1 .5-.5h2.975L19.5 26.185z" fill="purple"></path></g></svg> 
                                     </div>
                                     </button> */}
+                                    {/* <button onClick={toggleDrawer(true)}>toggle</button> */}
                                     <PlaceDetailsButton place={place} />
  
                                     <ChangeViewButton coords={[place.locations[0].coords]} placeId={place.id} />  
@@ -72,6 +80,33 @@ const PlaceSwiper = ({ places }:any) => {
                             </div>
                         
                             <div className="flex flex-col gap-1 text-sm mt-3 w-full sm:w-[480px] px-[10px] sm:px-[0px]"> 
+
+{/* 
+                            <SwipeableDrawer
+                                // container={container}
+                                anchor="bottom"
+                                open={open}
+                                onClose={toggleDrawer(false)}
+                                onOpen={toggleDrawer(true)}
+                                swipeAreaWidth={32}
+                                disableSwipeToOpen={false}
+                                ModalProps={{
+                                keepMounted: true,
+                                }}
+                            >
+                                <div className='z-[99999] w-[200px] h-[200px]'>
+
+                                test
+                                </div>
+                                
+                            </SwipeableDrawer> */}
+
+
+
+
+
+
+
                                 <div className="flex">
                                     <div className="text-right w-24 sm:w-32 border border-dashed p-1">by</div>
                                     <div className="text-sm border grow p-1 border-dashed bg-white bg-opacity-50">{ place.place }</div>
@@ -103,16 +138,6 @@ const PlaceSwiper = ({ places }:any) => {
                                     </div>
                                 </div> 
                                 
-                               
-                                
-                                {/* <div className="flex">
-                                    <div className="text-right w-20 sm:w-32 border border-dashed p-1">comment</div>
-                                    <div className="text-sm border grow p-1 border-dashed bg-white bg-opacity-50 backdrop-blur-md">{ place.description }</div>
-                                </div>  */}
-                                {/* <div className="flex">
-                                    <div className="text-right w-20 sm:w-32 border border-dashed p-1">badges</div>
-                                    <div className="text-sm border grow p-1 border-dashed bg-white bg-opacity-50 backdrop-blur-md">{ JSON.stringify(place.badges) }</div>
-                                </div>  */}
                             </div> 
                         </div>
                     

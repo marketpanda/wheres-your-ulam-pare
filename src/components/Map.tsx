@@ -44,10 +44,10 @@ const Map:FC<Props> = ({places})  => {
     const defaultPosition: [number, number] = [14.5813245, 121.0033887]
     const defaulZoom:number = 17
 
-    const markerRefs = useRef([])
+    const [userPosition, setUserPosition] = useState<null | number>(null)
     const MapInsideComponent = (props:any) => {
-      
       const theMap = useMap()
+      
       useEffect(() => { 
         const unsub = useCounterStore.subscribe(state => state, (newState, prevState) => { 
           
@@ -68,12 +68,46 @@ const Map:FC<Props> = ({places})  => {
         }) 
         return unsub
       }, [])
+
+      useEffect(() => {
+        if (userPosition) {
+
+          theMap.locate().on("locationfound", (e) => {
+            const userLocationMarker = L.marker(e.latlng).addTo(theMap)
+            userLocationMarker.bindPopup(`You are here`).openPopup()
+            theMap.flyTo(e.latlng, theMap.getZoom())
+            setUserPosition(null)
+          })
+
+        }
+
+
+      }, [userPosition])
+
+
       return null 
+
+      
+    }
+
+    const pinUserLocation = () => {
+      console.log('pin user location')
+    }
+    
+    const getUserLocation = () => {
+
+      setUserPosition(prev => prev = 1)
+      console.log('get user location')
     }
 
     
  
     return ( 
+        <>
+        <div className="z-[12000]  bg-purple-800 text-white w-full justify-between flex items-center">
+          <button onClick={pinUserLocation} className="h-12 rounded-full">Pin Location</button>
+          <button onClick={getUserLocation} className="h-12 rounded-full">Get Current Location</button>
+        </div>
         <MapContainer 
           scrollWheelZoom={true}
           zoom={defaulZoom} 
@@ -128,7 +162,8 @@ const Map:FC<Props> = ({places})  => {
             ))
           }
           <MapInsideComponent /> 
-      </MapContainer>
+        </MapContainer>
+        </>
   )
 }
 
