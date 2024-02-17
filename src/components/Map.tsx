@@ -2,8 +2,7 @@
 
 import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents, Tooltip } from "react-leaflet"
 import L, { Icon, LatLng, icon } from 'leaflet'
-import 'leaflet/dist/leaflet.css'
-import 'leaflet-defaulticon-compatibility'
+import 'leaflet/dist/leaflet.css' 
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css'
 import { FC, MutableRefObject, useEffect, useRef, useState } from "react"
 import markerIcon from './assets/mapIcon.png'
@@ -46,21 +45,34 @@ const Map:FC<Props> = ({places})  => {
 
     const [userPosition, setUserPosition] = useState<null | string>(null)
     const [singleMarker, setSingleMarker] = useState<L.Marker | null>(null) 
+    const [referenceCoords, setReferenceCoords] = useState<[number, number] | null>(null)
+
+    const [userLocationMaker, setUserLocationMaker] = useState<L.Marker | null>(null)
+
     const MapInsideComponent = (props:any) => {
       const theMap = useMap()
-      const theMapEvents = useMapEvents({
+      useMapEvents({
         click: (e) => {
           if (singleMarker) {
             singleMarker.remove()
           }
           const { lat, lng } = e.latlng
-          const newMarker = L.marker([lat,lng], {icon: legalIcon}).addTo(theMapEvents)
+          const newMarker = L.marker([lat,lng], {icon: legalIcon}).addTo(theMap)
           setSingleMarker(newMarker)
-          setUserPosition(null)
+          setUserPosition(null) 
 
+          setUserLocationMaker(newMarker)
+
+          setReferenceCoords([lat, lng])
           e.target.setView([lat, lng], e.target.getZoom())
         }
       })
+
+      useEffect(() => {
+        if (referenceCoords) {
+          console.log('hello ', referenceCoords)
+        }
+      }, [referenceCoords])
       
       useEffect(() => { 
         const unsub = useCounterStore.subscribe(state => state, (newState, prevState) => { 
@@ -90,18 +102,22 @@ const Map:FC<Props> = ({places})  => {
             userLocationMarker.bindPopup(`You are here`).openPopup()
             theMap.flyTo(e.latlng, 16)
             setUserPosition(null)
+            const {lat, lng } = e.latlng
+            setReferenceCoords([lat, lng])
           }) 
         }
   
-        return
+        
  
       }, [userPosition])
  
-      return userPosition === null ? null : (
-        <Marker  position={[14.5787404,121.0001156]}>
-          <Popup>You are here</Popup>
-        </Marker>
-      ) 
+      // return userPosition === null ? null : (
+      //   <Marker  position={[14.5787404,121.0001156]}>
+      //     <Popup>You are here2</Popup>
+      //   </Marker>
+      // ) 
+      return null
+      
     } 
     const pinUserLocation = (e:any) => {
       if (userPosition !== 'pinLocation') {
@@ -117,16 +133,35 @@ const Map:FC<Props> = ({places})  => {
  
     return ( 
         <>
-        <div className="z-[12000]  bg-purple-800 text-white w-full justify-between flex items-center">
-          <button onClick={pinUserLocation} className="h-12 rounded-full">Pin Location</button>
-          <button onClick={getUserLocation} className="h-12 rounded-full">Get Current Location</button>
-        </div>
+        
         <MapContainer 
           scrollWheelZoom={true}
           zoom={defaulZoom} 
           center={defaultPosition}
           className="w-full max-w-[720px] h-full"          
         >
+          <div className="w-1/2 sm:w-1/4 absolute right-0 z-[12000] flex justify-end gap-2 bg-purple-800 opacity-50 backdrop-blur">
+          {/* <button onClick={pinUserLocation} className="rounded-full w-20 text-left text-xs">Pin Location</button> */}
+            <div className="text-white flex flex-col items-center">
+              <span>
+
+              { referenceCoords && referenceCoords[0] }
+              </span>
+              <span>
+
+              { referenceCoords && referenceCoords[1] }
+              </span>
+            </div>
+            <div className=" w-[40px] right-2 top-2 text-white h-[40px] justify-center gap-2 flex p-2 items-center">
+
+              <button onClick={getUserLocation} className="rounded-full text-left text-xs">
+                <div className='rounded-full shadow w-[24px] h-[24px] flex items-center justify-center'>
+                  <svg viewBox="0 0 12 12"><g fill="none"><path d="M6 8a2 2 0 1 0 0-4a2 2 0 0 0 0 4zm-.5-5.97V.5a.5.5 0 0 1 1 0v1.53A4.002 4.002 0 0 1 9.969 5.5H11.5a.5.5 0 0 1 0 1H9.969a4.002 4.002 0 0 1-3.47 3.47L6.5 10v1.5a.5.5 0 0 1-1 0V10v-.03A4.002 4.002 0 0 1 2.03 6.5a.5.5 0 0 1-.03 0H.5a.5.5 0 0 1 0-1H2a.5.5 0 0 1 .03 0A4.002 4.002 0 0 1 5.5 2.032zM3 6a3 3 0 1 0 6 0a3 3 0 0 0-6 0z" fill="white"></path></g></svg>
+                  </div>
+              </button>
+            </div>
+
+          </div>
            
           <TileLayer  
             // attribution='&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; `<a href="https://openmaptiles.org/" target="_blank">OMT</a> &copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors'           
@@ -190,4 +225,4 @@ const Map:FC<Props> = ({places})  => {
   )
 }
 
-export default Map
+export default Map  
