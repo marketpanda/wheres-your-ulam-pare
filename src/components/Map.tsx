@@ -30,18 +30,17 @@ interface Place {
  
 
 const Map:FC<Props> = ({places})  => {  
-    // https://www.youtube.com/watch?v=V7LfrS3T5fs
-    // https://www.youtube.com/watch?v=OpvGiudUgXs
 
-    const legalIcon = new Icon({
-      // iconUrl: 'https://img.icons8.com/external-icongeek26-linear-colour-icongeek26/64/external-legal-business-and-finance-icongeek26-linear-colour-icongeek26.png',
-      iconUrl: markerIcon.src,
+    const legalIcon = L.divIcon({
+      html: `
+      <svg viewBox="0 0 16 16"><g fill="#902f61"><path d="M9.156 14.544C10.899 13.01 14 9.876 14 7A6 6 0 0 0 2 7c0 2.876 3.1 6.01 4.844 7.544a1.736 1.736 0 0 0 2.312 0zM6 7a2 2 0 1 1 4 0a2 2 0 0 1-4 0z" fill="currentColor"></path></g></svg>`,
+      className: "svg-icon",
       iconSize: [40,40],
       iconAnchor: [20,20],
       popupAnchor: [0,-20],
-     
+
     })
- 
+
     const defaultPosition: [number, number] = [14.5813245, 121.0033887]
     const defaulZoom:number = 17
 
@@ -54,7 +53,7 @@ const Map:FC<Props> = ({places})  => {
 
     const getPlacesCopy = places.map((item:any) => item)
     const getPlacesCopyCoords:any = places.map((item:any) =>{
-      const coordString = item.locations[0].coords
+     
       const lat = parseFloat(item.locations[0].coords[0])
       const lng = parseFloat(item.locations[0].coords[1])
       // console.log([lat, lng])
@@ -73,8 +72,7 @@ const Map:FC<Props> = ({places})  => {
         data.forEach((item:any) => {
           const newMarker = L.marker(item.locations[0].coords, { icon: legalIcon }).addTo(map)
           newMarker.bindPopup(item.item)
-          markers.push(newMarker)
-          
+          markers.push(newMarker) 
          
         })        
         console.log(markers)
@@ -106,17 +104,13 @@ const Map:FC<Props> = ({places})  => {
           if (nearest) {
               setNearestCoords([nearest.lat, nearest.lng])
           }
-          
-          console.log(nearest?.lat)
-          console.log(typeof nearest?.lat)
-          console.log('nearest ', nearest)  
          
-          console.log(nearest?.lat.toFixed(3))
-          console.log(nearest?.lng.toFixed(3)) 
           
           
         }
       })
+
+      //nearest coords
       useEffect(() => {
 
         if (!nearestCoords) return
@@ -125,10 +119,10 @@ const Map:FC<Props> = ({places})  => {
           const markerLatlng = marker.getLatLng()  
            
           if (
-            Math.abs(parseFloat(markerLatlng.lat.toFixed(3)) - parseFloat(nearestCoords[0]?.toFixed(3))) < 0.002 &&
-            Math.abs(parseFloat(markerLatlng.lng.toFixed(3)) - parseFloat(nearestCoords[1]?.toFixed(3))) < 0.002
+            Math.abs(parseFloat(markerLatlng.lat.toFixed(3)) - parseFloat(nearestCoords[0]?.toFixed(3))) < 0.005 &&
+            Math.abs(parseFloat(markerLatlng.lng.toFixed(3)) - parseFloat(nearestCoords[1]?.toFixed(3))) < 0.005
             ) {
-            theMap.setView(markerLatlng, 17)
+            theMap.flyTo(markerLatlng, 17)
             marker.openPopup() 
           }
           console.log('markerslength ', markers.length)
@@ -175,7 +169,7 @@ const Map:FC<Props> = ({places})  => {
           }) 
         }
       
-       
+        return 
         
  
       }, [userPosition])
@@ -200,7 +194,7 @@ const Map:FC<Props> = ({places})  => {
           className="w-full max-w-[720px] h-full"
           ref={mapRef}   
         >
-          <div className="w-1/2 sm:w-1/4 absolute right-0 z-[12000] flex justify-end gap-2 bg-purple-800 opacity-50 backdrop-blur">
+          <div className="w-1/2 sm:w-1/4 absolute right-0 z-[12000] flex justify-end gap-2 bg-purple-800  backdrop-blur">
           
             <div className="text-white flex flex-col items-center">
               <span>
@@ -217,12 +211,12 @@ const Map:FC<Props> = ({places})  => {
               { nearestCoords && nearestCoords[1] }
               </span>
             </div>
-            <div className=" w-[40px] right-2 top-2 text-white h-[40px] justify-center gap-2 flex p-2 items-center">
+            <div className=" w-[80px] right-2 top-2 text-white h-[80px] justify-center gap-2 flex p-2 items-center">
 
-              <button onClick={getUserLocation} className="rounded-full text-left text-xs">
-                <div className='rounded-full shadow w-[24px] h-[24px] flex items-center justify-center'>
+              <button onClick={getUserLocation} className="rounded-full flex items-center justify-center text-left text-xs w-[60px] h-[60px] bg-red-800">
+                <div className='rounded-full shadow w-[32px] h-[32px] flex items-center justify-center'>
                   <svg viewBox="0 0 12 12"><g fill="none"><path d="M6 8a2 2 0 1 0 0-4a2 2 0 0 0 0 4zm-.5-5.97V.5a.5.5 0 0 1 1 0v1.53A4.002 4.002 0 0 1 9.969 5.5H11.5a.5.5 0 0 1 0 1H9.969a4.002 4.002 0 0 1-3.47 3.47L6.5 10v1.5a.5.5 0 0 1-1 0V10v-.03A4.002 4.002 0 0 1 2.03 6.5a.5.5 0 0 1-.03 0H.5a.5.5 0 0 1 0-1H2a.5.5 0 0 1 .03 0A4.002 4.002 0 0 1 5.5 2.032zM3 6a3 3 0 1 0 6 0a3 3 0 0 0-6 0z" fill="white"></path></g></svg>
-                  </div>
+                </div>
               </button>
             </div>
 
