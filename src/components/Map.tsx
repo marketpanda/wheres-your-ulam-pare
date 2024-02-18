@@ -11,6 +11,7 @@ import ChangeViewButton from "./ChangeViewButton"
 import { useCounterStore } from "@/store"
 import GeometryUtil from "leaflet-geometryutil";
 import freebus from './geojson'
+import { number } from "zod"
  
 interface MarkerData {
   coordinates: [number, number]
@@ -48,14 +49,15 @@ const Map:FC<Props> = ({places})  => {
     const [singleMarker, setSingleMarker] = useState<L.Marker | null>(null) 
     const [referenceCoords, setReferenceCoords] = useState<[number, number] | null>(null)
 
-    const [userLocationMaker, setUserLocationMaker] = useState<L.Marker | null>(null)
+    const [nearestCoords, setNearestCoords] = useState<number[] | null>([])
+
 
     const getPlacesCopy = places.map((item:any) => item)
     const getPlacesCopyCoords:any = places.map((item:any) =>{
       const coordString = item.locations[0].coords
       const lat = parseFloat(item.locations[0].coords[0])
       const lng = parseFloat(item.locations[0].coords[1])
-      console.log([lat, lng])
+      // console.log([lat, lng])
       return [lat, lng]
     })
     
@@ -73,6 +75,7 @@ const Map:FC<Props> = ({places})  => {
           newMarker.bindPopup(item.item)
           markers.push(newMarker)
           
+         
         })        
         console.log(markers)
       }, [])
@@ -90,21 +93,50 @@ const Map:FC<Props> = ({places})  => {
           const { lat, lng } = e.latlng
           const newMarker = L.marker([lat,lng], {icon: legalIcon}).addTo(theMap)
           setSingleMarker(newMarker)
-          setUserPosition(null) 
-
-          setUserLocationMaker(newMarker)
+          setUserPosition(null)  
 
           setReferenceCoords([lat, lng])
-          e.target.setView([lat, lng], e.target.getZoom())  
+          // e.target.setView([lat, lng], e.target.getZoom())  
+
+         
           
+    
           const nearest = GeometryUtil.closest(theMap, getPlacesCopyCoords, e.latlng)
-          console.log(nearest)  
+
+          if (nearest) {
+              setNearestCoords([nearest.lat, nearest.lng])
+          }
+          
+          console.log(nearest?.lat)
+          console.log(typeof nearest?.lat)
+          console.log('nearest ', nearest)  
+         
+          console.log(nearest?.lat.toFixed(3))
+          console.log(nearest?.lng.toFixed(3)) 
+          
           
         }
       })
- 
-     
+      useEffect(() => {
 
+        if (!nearestCoords) return
+
+        markers.forEach(marker => {
+          const markerLatlng = marker.getLatLng()  
+           
+          if (
+            Math.abs(parseFloat(markerLatlng.lat.toFixed(3)) - parseFloat(nearestCoords[0]?.toFixed(3))) < 0.002 &&
+            Math.abs(parseFloat(markerLatlng.lng.toFixed(3)) - parseFloat(nearestCoords[1]?.toFixed(3))) < 0.002
+            ) {
+            theMap.setView(markerLatlng, 17)
+            marker.openPopup() 
+          }
+          console.log('markerslength ', markers.length)
+        })
+        return
+      }, [nearestCoords])
+ 
+      
       useEffect(() => {
         if (referenceCoords) {
           console.log('hello ', referenceCoords)
@@ -148,15 +180,9 @@ const Map:FC<Props> = ({places})  => {
  
       }, [userPosition])
   
-      return null
-      
+      return null 
     } 
-    const pinUserLocation = (e:any) => {
-      if (userPosition !== 'pinLocation') {
-        setUserPosition(prev => prev = 'pinLocation')
-        console.log('hello')
-      }
-    }
+    
     
     const getUserLocation = () => {
       setUserPosition(prev => prev = 'getLocation')
@@ -175,7 +201,7 @@ const Map:FC<Props> = ({places})  => {
           ref={mapRef}   
         >
           <div className="w-1/2 sm:w-1/4 absolute right-0 z-[12000] flex justify-end gap-2 bg-purple-800 opacity-50 backdrop-blur">
-          {/* <button onClick={pinUserLocation} className="rounded-full w-20 text-left text-xs">Pin Location</button> */}
+          
             <div className="text-white flex flex-col items-center">
               <span>
 
@@ -183,6 +209,12 @@ const Map:FC<Props> = ({places})  => {
               </span>
               <span>  
               { referenceCoords && referenceCoords[1] }
+              </span>
+              <span>  
+              { nearestCoords && nearestCoords[0] }
+              </span>
+              <span>  
+              { nearestCoords && nearestCoords[1] }
               </span>
             </div>
             <div className=" w-[40px] right-2 top-2 text-white h-[40px] justify-center gap-2 flex p-2 items-center">
