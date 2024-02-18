@@ -9,11 +9,11 @@ import PlaceDetailsButton from './PlaceDetailsButton';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer'
 import { tree } from 'next/dist/build/templates/app-page';
 
-register()
+register()  
 const PlaceSwiper = ({ places }:any) => {
     
-    
 
+     
     const loopThroughPrices = (prices:Object) => {
         const htmlArrayHolder = []
 
@@ -109,7 +109,10 @@ const PlaceSwiper = ({ places }:any) => {
 
                                 <div className="flex">
                                     <div className="text-right w-24 sm:w-32 border border-dashed p-1">by</div>
-                                    <div className="text-sm border grow p-1 border-dashed bg-white bg-opacity-50">{ place.place }</div>
+                                    <div className="text-sm border grow p-1 border-dashed bg-white bg-opacity-50">
+                                        { place.locations[0].coords }
+                                        { place.place }
+                                    </div>
                                 </div> 
                                 {/* <div className="flex">
                                     <div className="text-right w-20 sm:w-32 border border-dashed p-1">category</div>

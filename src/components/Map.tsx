@@ -1,13 +1,17 @@
 "use client"
 
 import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents, Tooltip } from "react-leaflet"
-import L, { Icon, LatLng, icon } from 'leaflet'
+import L, { Icon, LatLng, LatLngExpression, icon, marker } from 'leaflet'
+
 import 'leaflet/dist/leaflet.css' 
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css'
 import { FC, MutableRefObject, useEffect, useRef, useState } from "react"
 import markerIcon from './assets/mapIcon.png'
 import ChangeViewButton from "./ChangeViewButton"
 import { useCounterStore } from "@/store"
+import GeometryUtil from "leaflet-geometryutil";
+import freebus from './geojson'
+ 
 interface MarkerData {
   coordinates: [number, number]
   title: string
@@ -22,7 +26,6 @@ interface Place {
   place: string
   location: { coords: [number, number]}[] 
 }
-
  
 
 const Map:FC<Props> = ({places})  => {  
@@ -38,8 +41,6 @@ const Map:FC<Props> = ({places})  => {
      
     })
  
-    // const map = useRef()
- 
     const defaultPosition: [number, number] = [14.5813245, 121.0033887]
     const defaulZoom:number = 17
 
@@ -49,8 +50,38 @@ const Map:FC<Props> = ({places})  => {
 
     const [userLocationMaker, setUserLocationMaker] = useState<L.Marker | null>(null)
 
+    const getPlacesCopy = places.map((item:any) => item)
+    const getPlacesCopyCoords:any = places.map((item:any) =>{
+      const coordString = item.locations[0].coords
+      const lat = parseFloat(item.locations[0].coords[0])
+      const lng = parseFloat(item.locations[0].coords[1])
+      console.log([lat, lng])
+      return [lat, lng]
+    })
+    
+    const mapRef = useRef<L.Map | null>(null)
+    let [markers, setMarkers] = useState<L.Marker[]>([])
+    
+    const MapNewComponent:FC<any> = ({data}) => {
+      const map = useMap() 
+      useEffect(() => {
+        
+        if (!mapRef.current) {return}
+        markers = []
+        data.forEach((item:any) => {
+          const newMarker = L.marker(item.locations[0].coords, { icon: legalIcon }).addTo(map)
+          newMarker.bindPopup(item.item)
+          markers.push(newMarker)
+          
+        })        
+        console.log(markers)
+      }, [])
+      return null
+    } 
+
     const MapInsideComponent = (props:any) => {
       const theMap = useMap()
+    
       useMapEvents({
         click: (e) => {
           if (singleMarker) {
@@ -64,9 +95,15 @@ const Map:FC<Props> = ({places})  => {
           setUserLocationMaker(newMarker)
 
           setReferenceCoords([lat, lng])
-          e.target.setView([lat, lng], e.target.getZoom())
+          e.target.setView([lat, lng], e.target.getZoom())  
+          
+          const nearest = GeometryUtil.closest(theMap, getPlacesCopyCoords, e.latlng)
+          console.log(nearest)  
+          
         }
       })
+ 
+     
 
       useEffect(() => {
         if (referenceCoords) {
@@ -88,8 +125,7 @@ const Map:FC<Props> = ({places})  => {
           }
           console.log(newState.place.coords)
           console.log(newState.place.activePlaceId)
-           
-
+            
           
         }) 
         return unsub
@@ -106,16 +142,12 @@ const Map:FC<Props> = ({places})  => {
             setReferenceCoords([lat, lng])
           }) 
         }
-  
+      
+       
         
  
       }, [userPosition])
- 
-      // return userPosition === null ? null : (
-      //   <Marker  position={[14.5787404,121.0001156]}>
-      //     <Popup>You are here2</Popup>
-      //   </Marker>
-      // ) 
+  
       return null
       
     } 
@@ -130,7 +162,8 @@ const Map:FC<Props> = ({places})  => {
       setUserPosition(prev => prev = 'getLocation')
       console.log('get user location')
     }
- 
+    
+    
     return ( 
         <>
         
@@ -138,7 +171,8 @@ const Map:FC<Props> = ({places})  => {
           scrollWheelZoom={true}
           zoom={defaulZoom} 
           center={defaultPosition}
-          className="w-full max-w-[720px] h-full"          
+          className="w-full max-w-[720px] h-full"
+          ref={mapRef}   
         >
           <div className="w-1/2 sm:w-1/4 absolute right-0 z-[12000] flex justify-end gap-2 bg-purple-800 opacity-50 backdrop-blur">
           {/* <button onClick={pinUserLocation} className="rounded-full w-20 text-left text-xs">Pin Location</button> */}
@@ -147,8 +181,7 @@ const Map:FC<Props> = ({places})  => {
 
               { referenceCoords && referenceCoords[0] }
               </span>
-              <span>
-
+              <span>  
               { referenceCoords && referenceCoords[1] }
               </span>
             </div>
@@ -167,58 +200,9 @@ const Map:FC<Props> = ({places})  => {
             // attribution='&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; `<a href="https://openmaptiles.org/" target="_blank">OMT</a> &copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors'           
             url={`https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png?api_key=${process.env.STADIA_API_KEY}`} 
           />
-          {
-            places.map((entry:any, i:number) => (
-              <>
-             
-              <Marker 
-                position={entry.locations[0].coords}
-                key={entry.id}
-                // ref={entry.id}
-                icon={legalIcon}
-              >
-                 {/* <Tooltip>
-                  <div className="w-[180px]">
-                    <div className="h-full overflow-hidden rounded">
-                      <img
-                        className="object-cover w-full h-12"
-                        src={ entry.images } 
-                        alt={ entry.item } />
-                    </div> 
-                    <span className="font-bold text-violet-900 mt-1 w-full flex justify-end">
-                      @{entry.place} 
-                    </span>
-                  </div>
-              
-                </Tooltip> */}
-                <Popup> 
-                  <div className="w-[180px]">
-                  <div className="h-full overflow-hidden rounded">
-                    <img
-                      className="object-cover w-full h-12"
-                      src={ entry.images } 
-                      alt={ entry.item } />
-                  </div>
-                 
-                    <span className="font-bold text-violet-900 mt-1 w-full flex justify-end">
-                      @{entry.place} 
-                    </span>
-                  </div>
-                </Popup>
-              </Marker>
-              </>
-            ))
- 
-
-          }
-            {/* <Marker 
-              position={[14.5787404,121.0001156]}
-              icon={legalIcon}>
-            </Marker> */}
-
-         
-            
+        
           <MapInsideComponent />
+          <MapNewComponent data={getPlacesCopy} />
         
         </MapContainer>
         </>
