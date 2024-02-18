@@ -112,6 +112,7 @@ const Map:FC<Props> = ({places})  => {
 
       //nearest coords
       useEffect(() => {
+        
 
         if (!nearestCoords) return
 
@@ -136,6 +137,7 @@ const Map:FC<Props> = ({places})  => {
           console.log('hello ', referenceCoords)
         }
       }, [referenceCoords])
+ 
       
       useEffect(() => { 
         const unsub = useCounterStore.subscribe(state => state, (newState, prevState) => { 
@@ -151,6 +153,22 @@ const Map:FC<Props> = ({places})  => {
           }
           console.log(newState.place.coords)
           console.log(newState.place.activePlaceId)
+          
+          const lat = newState.place.coords[0][0]
+          const lng = newState.place.coords[0][1]
+
+          //pull lat and lng from an object and convert it to float from string
+          const currentCoord = [parseFloat(lat), parseFloat(lng)] 
+          //we find marker with equivalent lat, and we skip verifying its lng, since almost always
+          // it will be a match and we are using 'find', which returns the first result
+          const currentMarker = markers.find(marker => marker.getLatLng().lat === currentCoord[0])
+
+          if (currentMarker) {
+            currentMarker.openPopup()
+          } else {
+            console.log('marker not found')
+          }
+        
             
           
         }) 
@@ -194,7 +212,7 @@ const Map:FC<Props> = ({places})  => {
           className="w-full max-w-[720px] h-full"
           ref={mapRef}   
         >
-          <div className="w-1/2 sm:w-1/4 absolute right-0 z-[12000] flex justify-end gap-2 bg-purple-800  backdrop-blur">
+          <div className="w-1/2 sm:w-1/4 absolute right-0 z-[12000] flex justify-end gap-2 backdrop-blur">
           
             <div className="text-white flex flex-col items-center">
               <span>
@@ -211,9 +229,8 @@ const Map:FC<Props> = ({places})  => {
               { nearestCoords && nearestCoords[1] }
               </span>
             </div>
-            <div className=" w-[80px] right-2 top-2 text-white h-[80px] justify-center gap-2 flex p-2 items-center">
-
-              <button onClick={getUserLocation} className="rounded-full flex items-center justify-center text-left text-xs w-[60px] h-[60px] bg-red-800">
+            <div className="w-[80px] right-2 top-2 text-white h-[80px] justify-center gap-2 flex p-2 items-center">
+              <button onClick={getUserLocation} className="rounded-full flex items-center justify-center text-left text-xs w-[40px] h-[40px] bg-red-800">
                 <div className='rounded-full shadow w-[32px] h-[32px] flex items-center justify-center'>
                   <svg viewBox="0 0 12 12"><g fill="none"><path d="M6 8a2 2 0 1 0 0-4a2 2 0 0 0 0 4zm-.5-5.97V.5a.5.5 0 0 1 1 0v1.53A4.002 4.002 0 0 1 9.969 5.5H11.5a.5.5 0 0 1 0 1H9.969a4.002 4.002 0 0 1-3.47 3.47L6.5 10v1.5a.5.5 0 0 1-1 0V10v-.03A4.002 4.002 0 0 1 2.03 6.5a.5.5 0 0 1-.03 0H.5a.5.5 0 0 1 0-1H2a.5.5 0 0 1 .03 0A4.002 4.002 0 0 1 5.5 2.032zM3 6a3 3 0 1 0 6 0a3 3 0 0 0-6 0z" fill="white"></path></g></svg>
                 </div>

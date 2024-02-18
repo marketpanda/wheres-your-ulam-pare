@@ -14,7 +14,8 @@ type CounterStore = {
 export const useCounterStore = create<CounterStore>()(subscribeWithSelector((set) => ({
     place: { 
         coords: [1, 1],
-        activePlaceId: null 
+        activePlaceId: null,
+         
     },
     changeCoords: (newCoords) => set((state) => ({ ...state, place: { ...state.place, coords: newCoords}})),
     changeActivePlaceId: (newId) => set((state) => ({ ...state, place: { ...state.place, activePlaceId: newId }})),

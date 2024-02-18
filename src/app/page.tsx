@@ -24,8 +24,7 @@ const Home:FC = async () => {
       }
     })
 
-    const hasLocations = response.filter(place => place.locations.length > 0)
-    // console.log(response)
+    const hasLocations = response.filter(place => place.locations.length > 0) 
     console.log(hasLocations)
     return response
   }
@@ -38,9 +37,7 @@ const Home:FC = async () => {
       <div className="flex justify-center h-screen bg-gray-100">
                       
         <div className="flex flex-col rounded-xl overflow-hidden m-2 max-w-[720px] w-full shadow"> 
-          {/* <div className="mx-auto  flex w-full justify-center text-2xl font-semibold opacity-80 p-3"> 
-            Where&apos;s your Ulam Pare
-          </div> */}
+          
           <div className="h-2/5 bg-white">
             <MapCaller places={places} />
           </div>  
