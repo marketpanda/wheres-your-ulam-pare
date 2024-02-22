@@ -131,13 +131,16 @@ const Map:FC<Props> = ({places})  => {
           ).then(
             result => {
               result.sort((a, b) => a.dist - b.dist) 
-              return result[0]?.theMarker
+              const extractMarker = result[0]?.theMarker
+              console.log(extractMarker)
+              console.log(result)
+              return extractMarker
               
               // theMap.flyTo(result[0]?.theMarker?.getLatLng(), 17)
               // result[0]?.theMarker.openPopup()
             }
           ).then(result => { 
-              console.log(result)
+              console.log('Marker ', result)
             }
           ).catch(e =>
             console.log('Error ', e.message)
