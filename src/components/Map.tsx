@@ -131,13 +131,8 @@ const Map:FC<Props> = ({places})  => {
           ).then(
             result => {
               result.sort((a, b) => a.dist - b.dist) 
-              return result[0]?.theMarker 
-            }
-          ).then(
-            result => { 
-              // const closestMarker = result[0].theMarker
-              theMap.flyTo(result?.getLatLng(), 17)
-              result?.openPopup()
+              theMap.flyTo(result[0]?.theMarker.getLatLng(), 17)
+              result[0]?.theMarker.openPopup()
             }
           ).catch(e =>
             console.log('Error ', e.message)
