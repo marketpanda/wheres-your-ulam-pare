@@ -131,7 +131,7 @@ const Map:FC<Props> = ({places})  => {
           ).then(
             result => {
               result.sort((a, b) => a.dist - b.dist) 
-              theMap.flyTo(result[0]?.theMarker.getLatLng(), 17)
+              theMap.flyTo(result[0]?.theMarker?.getLatLng(), 17)
               result[0]?.theMarker.openPopup()
             }
           ).catch(e =>
