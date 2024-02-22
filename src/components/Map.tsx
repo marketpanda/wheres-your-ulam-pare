@@ -128,11 +128,13 @@ const Map:FC<Props> = ({places})  => {
               
               return { dist: getDistanceViaPackage, theMarker: marker, coords: [markerLatLng.lat, markerLatLng.lng]}
             })
-          ).then(result => result.sort((a, b) => a.dist - b.dist) 
-
-          ).then(result => { 
-              theMap.flyTo(result[0].theMarker.getLatLng(), 17)
-              result[0].theMarker.openPopup()
+          ).then(
+            result => result.sort((a, b) => a.dist - b.dist) 
+          ).then(
+            result => { 
+              const closestMarker = result[0].theMarker
+              theMap.flyTo(closestMarker.getLatLng(), 17)
+              closestMarker.openPopup()
             }
           ).catch(e =>
             console.log('Error ', e.message)
