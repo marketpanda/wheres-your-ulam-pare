@@ -70,7 +70,7 @@ const Map:FC<Props> = ({places})  => {
         
         if (!mapRef.current) { return }
         markers = []
-        data.forEach((item:any) => {
+        data.map((item:any) => {
           const newMarker = L.marker(item.locations[0].coords, { icon: legalIcon }).addTo(map)
           newMarker.bindPopup(item.item)
           markers.push(newMarker) 
@@ -89,63 +89,68 @@ const Map:FC<Props> = ({places})  => {
             singleMarker.remove()
           }
           const { lat, lng } = e.latlng
-          const newMarker = L.marker([lat,lng], {icon: legalIcon}).addTo(theMap)
+         
+          const latCast = parseFloat(lat.toFixed(6))
+          const lngCast = parseFloat(lng.toFixed(6))
+          console.log(latCast, lngCast)
+          const newMarker = L.marker([lat, lng], {icon: legalIcon}).addTo(theMap)
           setSingleMarker(newMarker)
           setUserPosition(null)  
 
           setReferenceCoords([lat, lng])
+          // console.log(lat.toFixed(6), lng.toFixed(6))
           // e.target.setView([lat, lng], e.target.getZoom())  
           
-          const nearest = GeometryUtil.closest(theMap, getPlacesCopyCoords, e.latlng)
-          // console.log(nearest)
+          const nearest = GeometryUtil.closest(theMap, getPlacesCopyCoords, [latCast, lngCast])
+          console.log(nearest)
+          console.log(getPlacesCopyCoords)
           if (nearest) {
-              setNearestCoords([nearest.lat, nearest.lng])
+              setNearestCoords([parseFloat(nearest.lat.toFixed(6)), parseFloat(nearest.lng.toFixed(6))]) 
           }
         }
       })
 
       //nearest coords
       useEffect(() => {
-        
+        console.log(markers)
         if (!nearestCoords) return
-
-        let differences:any = []
-       
-        markers.forEach(async marker => {
-          const markerLatlng = marker.getLatLng()  
-          // console.log(markerLatlng) 
-
-          let getDistanceViaPackage
-          if (nearestCoords) {
-            getDistanceViaPackage = getDistance(markerLatlng, nearestCoords)
-          }
-          
-          if (getDistanceViaPackage) {
-            differences.push({dist: getDistanceViaPackage, theMarker: marker  })
-            console.log(getDistanceViaPackage)
-          }
-          await differences.sort((a:any, b:any) => a.dist - b.dist)
-          
-        })
-
-        if (differences.length) { 
-          console.log(differences)
-        }
  
-        // setDifferences2(differences)
-        // console.log(differences2)
+        const computeDistances = async() => {   
+          // const sampleDistance = getDistance([14.600887, 120.9758244], [14.6013282, 120.9770207], 1)
+          // console.log(sampleDistance)
+          let differences = await Promise.all(
+            markers.map(async (marker) => {
+              const markerLatLng = marker.getLatLng()
+              console.log(markerLatLng)
+              console.log(nearestCoords )
+              const getDistanceViaPackage = getDistance([markerLatLng.lat, markerLatLng.lng], nearestCoords, 1)
+              
+              
+              return { dist: getDistanceViaPackage, theMarker: marker, coords: [markerLatLng.lat, markerLatLng.lng]}
+            })
+          )
 
-        // if (differences2?.length > 0 ) {
-        //   const getNearestMarker = differences2[0]?.theMarker
-        //   // getNearestMarker.openPopup
-        //   console.log(differences2)
-        //   theMap.flyTo(getNearestMarker.getLatLng(), 17)
-        // } else {
-        //   console.log('no length for markers array')
-        // } 
-        
-        
-        
+          differences.sort((a, b) => a.dist - b.dist) 
+
+          // if (differences.length) {
+          //   console.log(differences[0].theMarker.getLatLng())
+          //   // theMap.flyTo(differences[0].theMarker.getLatLng(), 17)
+          // } 
+
+          try {
+            if (differences && differences[0].theMarker) {
+              // console.log(differences)
+              console.log(differences[0].theMarker?.getLatLng())
+              theMap.flyTo(differences[0].theMarker?.getLatLng(), 17)
+              differences[0].theMarker.openPopup()
+            }
+          } catch (e) {
+            console.log(e)
+          }
+         
+        }
+
+        computeDistances() 
         return
       }, [nearestCoords])
       

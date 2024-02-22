@@ -109,9 +109,19 @@ const PlaceSwiper = ({ places }:any) => {
 
                                 <div className="flex">
                                     <div className="text-right w-24 sm:w-32 border border-dashed p-1">by</div>
-                                    <div className="text-sm border grow p-1 border-dashed bg-white bg-opacity-50">
-                                        { place.locations[0].coords }
+                                    <div className="flex flex-col text-sm border grow p-1 border-dashed bg-white bg-opacity-50">
+                                        <div className='flex gap-1'>
+                                            <span>
+                                                { place.locations[0].coords[0] }
+                                            </span>
+                                            <span>
+                                                { place.locations[0].coords[1] }
+                                            </span>
+                                        </div>
+                                        <div>
+
                                         { place.place }
+                                        </div>
                                     </div>
                                 </div> 
                                 {/* <div className="flex">
