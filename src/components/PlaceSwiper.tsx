@@ -12,8 +12,7 @@ import { tree } from 'next/dist/build/templates/app-page';
 register()  
 const PlaceSwiper = ({ places }:any) => {
     
-
-     
+ 
     const loopThroughPrices = (prices:Object) => {
         const htmlArrayHolder = []
 

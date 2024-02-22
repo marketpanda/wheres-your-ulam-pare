@@ -50,7 +50,7 @@ const Map:FC<Props> = ({places})  => {
     const [referenceCoords, setReferenceCoords] = useState<[number, number] | null>(null)
 
     const [nearestCoords, setNearestCoords] = useState<any>([])
-    const [differences2, setDifferences2] = useState<any | null>(null)
+    const [focusMarker, setFocusMarker] = useState<any | null>(null)
 
     const getPlacesCopy = places.map((item:any) => item)
     const getPlacesCopyCoords:any = places.map((item:any) =>{
@@ -122,29 +122,38 @@ const Map:FC<Props> = ({places})  => {
             markers.map(async (marker) => {
               const markerLatLng = marker.getLatLng()
               console.log(markerLatLng)
-              console.log(nearestCoords )
+              console.log(nearestCoords)
               const getDistanceViaPackage = getDistance([markerLatLng.lat, markerLatLng.lng], nearestCoords, 1)
               
               
               return { dist: getDistanceViaPackage, theMarker: marker, coords: [markerLatLng.lat, markerLatLng.lng]}
             })
+          ).then(result => result.sort((a, b) => a.dist - b.dist) 
+
+          ).then(result => { 
+              theMap.flyTo(result[0].theMarker.getLatLng(), 17)
+              result[0].theMarker.openPopup()
+            }
+          ).catch(e =>
+            console.log('Error ', e.message)
           )
 
-          differences.sort((a, b) => a.dist - b.dist) 
+          
+          
 
           // if (differences.length) {
           //   console.log(differences[0].theMarker.getLatLng())
           //   // theMap.flyTo(differences[0].theMarker.getLatLng(), 17)
           // } 
 
-          try {
-            if (differences && differences.length > 0 && differences[0].theMarker) {               
-              theMap.flyTo(differences[0].theMarker?.getLatLng(), 17)
-              differences[0].theMarker.openPopup()
-            }
-          } catch (e) {
-            console.log(e)
-          }
+          // try {
+          //   if (differences && differences.length > 0 && differences[0].theMarker) {               
+          //     theMap.flyTo(differences[0].theMarker?.getLatLng(), 17)
+          //     differences[0].theMarker.openPopup()
+          //   }
+          // } catch (e) {
+          //   console.log(e)
+          // }
          
         }
 
