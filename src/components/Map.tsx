@@ -138,9 +138,9 @@ const Map:FC<Props> = ({places})  => {
           // } 
 
           try {
-            if (differences && differences[0].theMarker) {
+            if (differences && differences.length > 0 && differences[0].theMarker) {
               // console.log(differences)
-              console.log(differences[0].theMarker?.getLatLng())
+               
               theMap.flyTo(differences[0].theMarker?.getLatLng(), 17)
               differences[0].theMarker.openPopup()
             }
