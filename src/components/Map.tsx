@@ -131,8 +131,13 @@ const Map:FC<Props> = ({places})  => {
           ).then(
             result => {
               result.sort((a, b) => a.dist - b.dist) 
-              theMap.flyTo(result[0]?.theMarker?.getLatLng(), 17)
-              result[0]?.theMarker.openPopup()
+              return result[0]?.theMarker
+              
+              // theMap.flyTo(result[0]?.theMarker?.getLatLng(), 17)
+              // result[0]?.theMarker.openPopup()
+            }
+          ).then(result => { 
+              console.log(result)
             }
           ).catch(e =>
             console.log('Error ', e.message)
@@ -160,6 +165,8 @@ const Map:FC<Props> = ({places})  => {
         computeDistances() 
         return
       }, [nearestCoords, marker])
+
+       
       
       useEffect(() => {
         if (referenceCoords) {
