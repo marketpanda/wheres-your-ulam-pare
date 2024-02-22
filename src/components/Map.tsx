@@ -12,7 +12,8 @@ import { useCounterStore } from "@/store"
 import GeometryUtil from "leaflet-geometryutil";
 import freebus from './geojson'
 import { number } from "zod"
- 
+import { getDistance } from 'geolib';
+
 interface MarkerData {
   coordinates: [number, number]
   title: string
@@ -48,8 +49,8 @@ const Map:FC<Props> = ({places})  => {
     const [singleMarker, setSingleMarker] = useState<L.Marker | null>(null) 
     const [referenceCoords, setReferenceCoords] = useState<[number, number] | null>(null)
 
-    const [nearestCoords, setNearestCoords] = useState<number[] | null>([])
-
+    const [nearestCoords, setNearestCoords] = useState<any>([])
+    const [differences2, setDifferences2] = useState<any | null>(null)
 
     const getPlacesCopy = places.map((item:any) => item)
     const getPlacesCopyCoords:any = places.map((item:any) =>{
@@ -67,15 +68,14 @@ const Map:FC<Props> = ({places})  => {
       const map = useMap() 
       useEffect(() => {
         
-        if (!mapRef.current) {return}
+        if (!mapRef.current) { return }
         markers = []
         data.forEach((item:any) => {
           const newMarker = L.marker(item.locations[0].coords, { icon: legalIcon }).addTo(map)
           newMarker.bindPopup(item.item)
           markers.push(newMarker) 
-         
         })        
-        console.log(markers)
+        // console.log(markers)
       }, [])
       return null
     } 
@@ -95,46 +95,63 @@ const Map:FC<Props> = ({places})  => {
 
           setReferenceCoords([lat, lng])
           // e.target.setView([lat, lng], e.target.getZoom())  
-
-         
           
-    
           const nearest = GeometryUtil.closest(theMap, getPlacesCopyCoords, e.latlng)
-
+          // console.log(nearest)
           if (nearest) {
               setNearestCoords([nearest.lat, nearest.lng])
           }
-         
-          
-          
         }
       })
 
       //nearest coords
       useEffect(() => {
         
-
         if (!nearestCoords) return
 
-        markers.forEach(marker => {
+        let differences:any = []
+       
+        markers.forEach(async marker => {
           const markerLatlng = marker.getLatLng()  
-           
-          if (
-            Math.abs(parseFloat(markerLatlng.lat.toFixed(3)) - parseFloat(nearestCoords[0]?.toFixed(3))) < 0.005 &&
-            Math.abs(parseFloat(markerLatlng.lng.toFixed(3)) - parseFloat(nearestCoords[1]?.toFixed(3))) < 0.005
-            ) {
-            theMap.flyTo(markerLatlng, 17)
-            marker.openPopup() 
+          // console.log(markerLatlng) 
+
+          let getDistanceViaPackage
+          if (nearestCoords) {
+            getDistanceViaPackage = getDistance(markerLatlng, nearestCoords)
           }
-          console.log('markerslength ', markers.length)
+          
+          if (getDistanceViaPackage) {
+            differences.push({dist: getDistanceViaPackage, theMarker: marker  })
+            console.log(getDistanceViaPackage)
+          }
+          await differences.sort((a:any, b:any) => a.dist - b.dist)
+          
         })
+
+        if (differences.length) { 
+          console.log(differences)
+        }
+ 
+        // setDifferences2(differences)
+        // console.log(differences2)
+
+        // if (differences2?.length > 0 ) {
+        //   const getNearestMarker = differences2[0]?.theMarker
+        //   // getNearestMarker.openPopup
+        //   console.log(differences2)
+        //   theMap.flyTo(getNearestMarker.getLatLng(), 17)
+        // } else {
+        //   console.log('no length for markers array')
+        // } 
+        
+        
+        
         return
       }, [nearestCoords])
- 
       
       useEffect(() => {
         if (referenceCoords) {
-          console.log('hello ', referenceCoords)
+          // console.log('hello ', referenceCoords)
         }
       }, [referenceCoords])
  
@@ -151,8 +168,8 @@ const Map:FC<Props> = ({places})  => {
               duration: 2
             })
           }
-          console.log(newState.place.coords)
-          console.log(newState.place.activePlaceId)
+          // console.log(newState.place.coords)
+          // console.log(newState.place.activePlaceId)
           
           const lat = newState.place.coords[0][0]
           const lng = newState.place.coords[0][1]
@@ -188,10 +205,7 @@ const Map:FC<Props> = ({places})  => {
         }
       
         return 
-        
- 
       }, [userPosition])
-  
       return null 
     } 
     

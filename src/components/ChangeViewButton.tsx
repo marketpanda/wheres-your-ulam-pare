@@ -11,12 +11,8 @@ interface Props {
 const ChangeViewButton:FC<Props> = ({placeId, map, coords, zoom, count}) => {
     
     
-    const zoomToMap = () => {
-
-        useCounterStore.getState().changePlace(coords, placeId)  
-        // useCounterStore.getState().changeCoords(coords)  
-        // useCounterStore.getState().changeActivePlaceId(placeId)  
-        
+    const zoomToMap = () => { 
+        useCounterStore.getState().changePlace(coords, placeId)   
     }
 
     
