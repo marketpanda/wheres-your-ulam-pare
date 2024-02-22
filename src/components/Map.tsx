@@ -118,58 +118,39 @@ const Map:FC<Props> = ({places})  => {
         const computeDistances = async() => {   
           // const sampleDistance = getDistance([14.600887, 120.9758244], [14.6013282, 120.9770207], 1)
           // console.log(sampleDistance)
-          let differences = await Promise.all(
+          await Promise.all(
             markers.map(async (marker) => {
               const markerLatLng = marker.getLatLng()
               console.log(markerLatLng)
               console.log(nearestCoords)
-              const getDistanceViaPackage = getDistance([markerLatLng.lat, markerLatLng.lng], nearestCoords, 1)
-              
+              const getDistanceViaPackage = getDistance([markerLatLng.lat, markerLatLng.lng], nearestCoords, 1)    
               
               return { dist: getDistanceViaPackage, theMarker: marker, coords: [markerLatLng.lat, markerLatLng.lng]}
             })
           ).then(
             result => {
               result.sort((a, b) => a.dist - b.dist) 
-              const extractMarker = result[0]?.theMarker
-              console.log(extractMarker)
-              console.log(result)
-              return extractMarker
+              console.log(result[0]?.theMarker)
+              useCounterStore.getState().changeFocusMarker(result[0]?.theMarker) 
               
-              // theMap.flyTo(result[0]?.theMarker?.getLatLng(), 17)
-              // result[0]?.theMarker.openPopup()
-            }
-          ).then(result => { 
-              console.log('Marker ', result)
             }
           ).catch(e =>
             console.log('Error ', e.message)
           )
-
-          
-          
-
-          // if (differences.length) {
-          //   console.log(differences[0].theMarker.getLatLng())
-          //   // theMap.flyTo(differences[0].theMarker.getLatLng(), 17)
-          // } 
-
-          // try {
-          //   if (differences && differences.length > 0 && differences[0].theMarker) {               
-          //     theMap.flyTo(differences[0].theMarker?.getLatLng(), 17)
-          //     differences[0].theMarker.openPopup()
-          //   }
-          // } catch (e) {
-          //   console.log(e)
-          // }
-         
         }
-
         computeDistances() 
         return
+         
       }, [nearestCoords, marker])
 
-       
+      useEffect(() => {
+        const unsub = useCounterStore.subscribe(state => state.focusMarker, (newState, prevState) => {
+          console.log(newState)
+          theMap.flyTo(newState.getLatLng(), 17)
+          newState.openPopup()
+        })  
+        return unsub
+      }, [])
       
       useEffect(() => {
         if (referenceCoords) {
@@ -179,11 +160,11 @@ const Map:FC<Props> = ({places})  => {
  
       
       useEffect(() => { 
-        const unsub = useCounterStore.subscribe(state => state, (newState, prevState) => { 
+        const unsub = useCounterStore.subscribe(state => state.place.coords, (newState, prevState) => { 
           
           if (theMap) {
-            const num1 = parseFloat(newState.place.coords[0])
-            const num2 = parseFloat(newState.place.coords[0][1])
+            const num1 = parseFloat(newState[0])
+            const num2 = parseFloat(newState[0][1])
             
             theMap.flyTo([num1, num2], 18, {
               animate: true,
@@ -193,8 +174,8 @@ const Map:FC<Props> = ({places})  => {
           // console.log(newState.place.coords)
           // console.log(newState.place.activePlaceId)
           
-          const lat = newState.place.coords[0][0]
-          const lng = newState.place.coords[0][1]
+          const lat = newState[0][0]
+          const lng = newState[0][1]
 
           //pull lat and lng from an object and convert it to float from string
           const currentCoord = [parseFloat(lat), parseFloat(lng)] 

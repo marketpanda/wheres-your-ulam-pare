@@ -1,12 +1,15 @@
+import { Marker } from 'leaflet'
 import { create } from 'zustand'
 import { subscribeWithSelector } from 'zustand/middleware'
 
-type CounterStore = { 
+type CounterStore = {
+    changeFocusMarker(theMarker: Marker<any>): unknown 
     place: {
         coords?: any 
         activePlaceId?:any
         focusMarker?: any
-    }    
+    },
+    focusMarker?: any
     changeCoords: (newCoords: number[]) => void 
     changeActivePlaceId: (newId: string) => void 
     changePlace: (newCoords: any, newPlaceId: string) => void 
@@ -15,10 +18,9 @@ type CounterStore = {
 export const useCounterStore = create<CounterStore>()(subscribeWithSelector((set) => ({
     place: { 
         coords: [1, 1],
-        activePlaceId: null,
-        focusMarker: null
-         
+        activePlaceId: null, 
     },
+    focusMarker: null,
     changeCoords: (newCoords) => set((state) => ({ ...state, place: { ...state.place, coords: newCoords}})),
     changeActivePlaceId: (newId) => set((state) => ({ ...state, place: { ...state.place, activePlaceId: newId }})),
     changePlace: (newCoords: number[], newId: string) => set((state) => ({
@@ -27,6 +29,7 @@ export const useCounterStore = create<CounterStore>()(subscribeWithSelector((set
             coords: newCoords,
             activePlaceId: newId
         }
-    }))
+    })),
+    changeFocusMarker: (newFocusMarker:L.Marker) => set((state) => ({ ...state, focusMarker: newFocusMarker }) )
 })))
 
