@@ -130,9 +130,13 @@ const Map:FC<Props> = ({places})  => {
           ).then(
             result => {
               result.sort((a, b) => a.dist - b.dist) 
-              console.log(result[0]?.theMarker)
-              useCounterStore.getState().changeFocusMarker(result[0]?.theMarker) 
-              
+              let extractMarker = result[0]?.theMarker
+              if (extractMarker === undefined || !extractMarker ) { 
+                extractMarker = result[0]?.theMarker
+                console.log(extractMarker)
+              }
+              console.log(extractMarker)
+              useCounterStore.getState().changeFocusMarker(extractMarker) 
             }
           ).catch(e =>
             console.log('Error ', e.message)
@@ -145,8 +149,17 @@ const Map:FC<Props> = ({places})  => {
 
       useEffect(() => {
         const unsub = useCounterStore.subscribe(state => state.focusMarker, (newState, prevState) => {
+          console.log('focusMarker newstate ', newState)
+          // const mark = newState(
+          //   L.latLng(
+          //     parseFloat('latitude'),
+          //     parseFloat('longitude'),
+          //   )
+          // )
+          // console.log(mark)
           console.log(newState)
-          theMap.flyTo(newState.getLatLng(), 17)
+          const markerCoords:L.LatLng = newState.getLatLng()
+          theMap.flyTo(markerCoords, 17)
           newState.openPopup()
         })  
         return unsub
