@@ -1,5 +1,6 @@
 import React from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
+import Image from 'next/image'
 
 
 const PlaceDetailsButton = (place:any) => {
@@ -31,7 +32,7 @@ const PlaceDetailsButton = (place:any) => {
         </Dialog.Title>
         <Dialog.Description className="flex flex-col mt-[10px] mb-5 text-[15px] leading-normal">
             <div className='flex justify-between w-full h-32'>
-                <img src={place.place.images} className="object-cover" alt="Image"  />
+                <Image src={place.place.images} className="object-cover w-full" alt="Image" width={200} height={200} />
             </div>
             <div className='flex justify-between w-full'>
                 <span>Item</span>

@@ -10,7 +10,6 @@ import React, { FC }  from 'react'
 import MapCaller from "@/components/MapDynamicWrapped";
 
 import { useCounterStore } from "@/store";
-import Link from "next/link";
  
 const prisma = new PrismaClient()
  
@@ -38,14 +37,12 @@ const Home:FC = async () => {
       <div className="flex justify-center h-screen bg-gray-100">
                       
         <div className="flex flex-col rounded-xl overflow-hidden m-2 max-w-[720px] w-full shadow"> 
-          <div className="w-full h-full items-center flex flex-col justify-center">
-
-          <span>
-            Where s Your Ulam Pare!
-          </span>
-          <Link href="/map">
-            Explore
-          </Link>
+          
+          <div className="h-2/5 bg-white">
+            <MapCaller places={places} />
+          </div>  
+          <div className="h-3/5 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500"> 
+            <PlaceSwiper places={places} />
           </div>
         </div> 
       </div>

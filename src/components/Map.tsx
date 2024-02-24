@@ -130,13 +130,19 @@ const Map:FC<Props> = ({places})  => {
           ).then(
             result => {
               result.sort((a, b) => a.dist - b.dist) 
-              let extractMarker = result[0]?.theMarker
-              if (extractMarker === undefined || !extractMarker ) { 
-                extractMarker = result[0]?.theMarker
+
+              let extractMarker:L.Marker | null = null
+              result.map((item, i) => {
+                if (i === 0) {
+                  extractMarker = item.theMarker
+                } 
+                return
+              })
+
+              if (extractMarker) {
                 console.log(extractMarker)
+                useCounterStore.getState().changeFocusMarker(extractMarker) 
               }
-              console.log(extractMarker)
-              useCounterStore.getState().changeFocusMarker(extractMarker) 
             }
           ).catch(e =>
             console.log('Error ', e.message)
@@ -148,19 +154,21 @@ const Map:FC<Props> = ({places})  => {
       }, [nearestCoords, marker])
 
       useEffect(() => {
-        const unsub = useCounterStore.subscribe(state => state.focusMarker, (newState, prevState) => {
+
+        const unsub = useCounterStore.subscribe(state => state?.focusMarker2, (newState, prevState) => {
           console.log('focusMarker newstate ', newState)
-          // const mark = newState(
-          //   L.latLng(
-          //     parseFloat('latitude'),
-          //     parseFloat('longitude'),
-          //   )
-          // )
-          // console.log(mark)
+          const wrapToArray = [newState]
+
           console.log(newState)
-          const markerCoords:L.LatLng = newState.getLatLng()
-          theMap.flyTo(markerCoords, 17)
-          newState.openPopup()
+          wrapToArray.forEach((item) => { 
+            if (theMap) {
+              const markerCoords:L.LatLng = item?.getLatLng()
+              if (markerCoords) {
+                theMap.flyTo(markerCoords, 17)
+                item.openPopup()
+              }
+            }
+          })
         })  
         return unsub
       }, [])

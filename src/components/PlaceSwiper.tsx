@@ -8,6 +8,7 @@ import { useCounterStore } from '@/store';
 import PlaceDetailsButton from './PlaceDetailsButton';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer'
 import { tree } from 'next/dist/build/templates/app-page';
+import './assets/mySlider.css'
 
 register()  
 const PlaceSwiper = ({ places }:any) => {
@@ -32,9 +33,16 @@ const PlaceSwiper = ({ places }:any) => {
         setOpen(newOpen)
     }
 
+   
+
   return (
     <div className='relative top-[-50px] sm:top-4 z-[8888]'> 
-        <swiper-container loop="true" navigation="true">
+        <swiper-container
+            loop="true"
+            navigation="true"
+            modules="modules"
+            thumbs-swiper=".my-thumbs" 
+        >
             {
                 places.map((place:any,i:any) => (
                     <swiper-slide key={i}>
@@ -58,9 +66,13 @@ const PlaceSwiper = ({ places }:any) => {
                                 alt={ place.item } />
                             </div>
                             <div className="relative bg-white bg-opacity-20 rounded-none sm:rounded  py-1 flex items-center  w-full sm:w-[480px] px-[10px] justify-between text-2xl">
-                                <div className='font-bold'>
-
-                                { place.item}
+                                <div className='font-bold flex flex-col'>
+                                    <span>
+                                        { place.item }
+                                    </span>
+                                    <span className='text-sm'>
+                                        @{ place.place }
+                                    </span>
                                 </div>
                                 <div className='flex gap-2 absolute right-5'>
                                     
@@ -77,34 +89,9 @@ const PlaceSwiper = ({ places }:any) => {
                                 </div>
                             
                             </div>
-                        
+{/*                         
                             <div className="flex flex-col gap-1 text-sm mt-3 w-full sm:w-[480px] px-[10px] sm:px-[0px]"> 
-
-{/* 
-                            <SwipeableDrawer
-                                // container={container}
-                                anchor="bottom"
-                                open={open}
-                                onClose={toggleDrawer(false)}
-                                onOpen={toggleDrawer(true)}
-                                swipeAreaWidth={32}
-                                disableSwipeToOpen={false}
-                                ModalProps={{
-                                keepMounted: true,
-                                }}
-                            >
-                                <div className='z-[99999] w-[200px] h-[200px]'>
-
-                                test
-                                </div>
-                                
-                            </SwipeableDrawer> */}
-
-
-
-
-
-
+  
 
                                 <div className="flex">
                                     <div className="text-right w-24 sm:w-32 border border-dashed p-1">by</div>
@@ -123,10 +110,7 @@ const PlaceSwiper = ({ places }:any) => {
                                         </div>
                                     </div>
                                 </div> 
-                                {/* <div className="flex">
-                                    <div className="text-right w-20 sm:w-32 border border-dashed p-1">category</div>
-                                    <div className="text-sm border grow p-1 border-dashed bg-white bg-opacity-50 backdrop-blur-md">{ place.category }</div>
-                                </div>  */}
+                               
                                 <div className="flex">
                                     <div className="text-right w-24 sm:w-32 border border-dashed p-1">price</div>
                                     <div className="text-sm border grow p-1 border-dashed bg-white bg-opacity-50">{
@@ -150,7 +134,7 @@ const PlaceSwiper = ({ places }:any) => {
                                     </div>
                                 </div> 
                                 
-                            </div> 
+                            </div>  */}
                         </div>
                     
                     </swiper-slide>
@@ -159,7 +143,35 @@ const PlaceSwiper = ({ places }:any) => {
             }
            
             
-        </swiper-container> 
+        </swiper-container>
+        
+        <div className='mx-1'>
+        <swiper-container
+            loop={true}
+            thumbsSlider="" 
+            class="swiper2 my-thumbs"  
+            className="swiper2 my-thumbs"  
+            free-mode="true"
+            watch-slides-progress="true"    
+            modules="modules" 
+            slides-per-view="3"
+            
+        >
+            {
+                 places.map((place:any,i:any) => (
+                    <swiper-slide key={i}>
+                        
+                        <div className='text-xs px-2 py-1 font-semibold mb-1 rounded bg-white truncate'>
+                            {place.place}
+                        </div>
+                        <div className='w-full h-16 rounded overflow-hidden'>
+                            <Image src={place.images} className='object-cover h-full' alt={place.item} width={180} height={100} />
+                        </div>
+                    </swiper-slide>
+                ))
+            }
+        </swiper-container>
+        </div>
     </div>
   )
 }
