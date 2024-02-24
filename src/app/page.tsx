@@ -49,7 +49,7 @@ const Home:FC = async () => {
 
             </div>
             <span>
-              Where s Your Ulam Pare?
+              Where s Your Ulam Pare by Jones 
             </span>
             <Link href="/map">
               <div className="rounded text-white px-4 py-2 bg-gradient-to-r from-fuchsia-500 to-cyan-500">
