@@ -4,6 +4,17 @@ import Image from 'next/image'
 
 
 const PlaceDetailsButton = (place:any) => {
+  const loopThroughPrices = (prices:Object) => {
+    const htmlArrayHolder = []
+
+    for (const [key, value] of Object.entries(prices)) {
+        const k = key
+        const v = value
+        htmlArrayHolder.push(`Php${v}/${k} `)
+    }
+    
+    return htmlArrayHolder
+}
   
 
   return (
@@ -49,7 +60,9 @@ const PlaceDetailsButton = (place:any) => {
             
             <div className='flex justify-between w-full'>
                 <span>price</span>
-                <span>{JSON.stringify(place.place.price)}</span>
+
+                <span>{loopThroughPrices(place.place.price)}</span>
+                {/* <span>{JSON.stringify(place.place.price)}</span> */}
             </div>
             {/* <div className='flex justify-between w-full'>
                 <span>location(s)</span>

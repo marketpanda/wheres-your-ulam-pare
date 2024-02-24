@@ -30,8 +30,7 @@ interface Place {
 }
  
 
-const Map:FC<Props> = ({places})  => {  
-
+const Map:FC<Props> = ({places})  => {    
     const legalIcon = L.divIcon({
       html: `
       <svg viewBox="0 0 16 16"><g fill="#902f61"><path d="M9.156 14.544C10.899 13.01 14 9.876 14 7A6 6 0 0 0 2 7c0 2.876 3.1 6.01 4.844 7.544a1.736 1.736 0 0 0 2.312 0zM6 7a2 2 0 1 1 4 0a2 2 0 0 1-4 0z" fill="currentColor"></path></g></svg>`,

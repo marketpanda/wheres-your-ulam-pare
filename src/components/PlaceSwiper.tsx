@@ -14,17 +14,7 @@ register()
 const PlaceSwiper = ({ places }:any) => {
     
  
-    const loopThroughPrices = (prices:Object) => {
-        const htmlArrayHolder = []
-
-        for (const [key, value] of Object.entries(prices)) {
-            const k = key
-            const v = value
-            htmlArrayHolder.push(`Php${v}/${k} `)
-        }
-        
-        return htmlArrayHolder
-    }
+   
 
     console.log(places)
 
@@ -65,7 +55,7 @@ const PlaceSwiper = ({ places }:any) => {
                                 height="250"
                                 alt={ place.item } />
                             </div>
-                            <div className="relative bg-white bg-opacity-20 rounded-none sm:rounded  py-1 flex items-center  w-full sm:w-[480px] px-[10px] justify-between text-2xl">
+                            <div className="relative bg-white bg-opacity-20 rounded-none sm:rounded-t  py-1 flex items-center  w-full sm:w-[480px] px-[10px] justify-between text-2xl">
                                 <div className='font-bold flex flex-col'>
                                     <span>
                                         { place.item }
@@ -145,7 +135,11 @@ const PlaceSwiper = ({ places }:any) => {
             
         </swiper-container>
         
-        <div className='mx-1'>
+        
+
+
+        <div className='w-full sm:w-[480px] mx-auto rounded-none sm:rounded-b overflow-hidden'>
+       
         <swiper-container
             loop={true}
             thumbsSlider="" 
@@ -160,18 +154,21 @@ const PlaceSwiper = ({ places }:any) => {
             {
                  places.map((place:any,i:any) => (
                     <swiper-slide key={i}>
+                       
+                            <div className='text-xs px-2 py-1 font-semibold  bg-white truncate'>
+                                {place.place}
+                            </div>
+                            <div className='w-full h-16 overflow-hidden'>
+                                <Image src={place.images} className='object-cover h-full' alt={place.item} width={180} height={100} />
+                            </div>
                         
-                        <div className='text-xs px-2 py-1 font-semibold mb-1 rounded bg-white truncate'>
-                            {place.place}
-                        </div>
-                        <div className='w-full h-16 rounded overflow-hidden'>
-                            <Image src={place.images} className='object-cover h-full' alt={place.item} width={180} height={100} />
-                        </div>
+                        
                     </swiper-slide>
                 ))
             }
         </swiper-container>
         </div>
+         
     </div>
   )
 }

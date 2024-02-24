@@ -18,6 +18,8 @@ const prisma = new PrismaClient()
 const Home:FC = async () => { 
 
   const getPlaces = async () => {
+    //we add this snippet of artificial delay so we can showcase our loading screen
+    await new Promise((resolve) => setTimeout(resolve, 2400))
     const response = await prisma.place.findMany({
       include: {
         locations: true

@@ -39,13 +39,24 @@ const Home:FC = async () => {
                       
         <div className="flex flex-col rounded-xl overflow-hidden m-2 max-w-[720px] w-full shadow"> 
           <div className="w-full h-full items-center flex flex-col justify-center">
+            <div className="h-[200px] flex items-center">
+              <span className="font-bold text-2xl opacity-20 border">
+              &quot;Love at first bite&quot;
+              </span>
+              {/* <span className="font-bold text-2xl opacity-20 border">
+                "Season everything with love"
+              </span> */}
 
-          <span>
-            Where s Your Ulam Pare!
-          </span>
-          <Link href="/map">
-            Explore
-          </Link>
+            </div>
+            <span>
+              Where s Your Ulam Pare?
+            </span>
+            <Link href="/map">
+              <div className="rounded text-white px-4 py-2 bg-gradient-to-r from-fuchsia-500 to-cyan-500">
+                Explore
+              </div>
+            </Link>
+            
           </div>
         </div> 
       </div>
