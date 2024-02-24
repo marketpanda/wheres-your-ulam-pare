@@ -92,20 +92,18 @@ const Map:FC<Props> = ({places})  => {
           const latCast = parseFloat(lat.toFixed(6))
           const lngCast = parseFloat(lng.toFixed(6))
           console.log(latCast, lngCast)
-          const newMarker = L.marker([lat, lng], {icon: legalIcon}).addTo(theMap)
-          setSingleMarker(newMarker)
-          setUserPosition(null)  
+          // const newMarker = L.marker([lat, lng], {icon: legalIcon}).addTo(theMap)
+          // setSingleMarker(newMarker)
+          // setUserPosition(null)  
 
-          setReferenceCoords([lat, lng])
-          // console.log(lat.toFixed(6), lng.toFixed(6))
-          // e.target.setView([lat, lng], e.target.getZoom())  
-          
-          const nearest = GeometryUtil.closest(theMap, getPlacesCopyCoords, [latCast, lngCast])
-          console.log(nearest)
-          console.log(getPlacesCopyCoords)
-          if (nearest) {
-              setNearestCoords([parseFloat(nearest.lat.toFixed(6)), parseFloat(nearest.lng.toFixed(6))]) 
-          }
+          // setReferenceCoords([lat, lng])
+         
+          // const nearest = GeometryUtil.closest(theMap, getPlacesCopyCoords, [latCast, lngCast])
+          // console.log(nearest)
+          // console.log(getPlacesCopyCoords)
+          // if (nearest) {
+          //     setNearestCoords([parseFloat(nearest.lat.toFixed(6)), parseFloat(nearest.lng.toFixed(6))]) 
+          // }
         }
       })
 
